@@ -7,6 +7,7 @@ static frontend consumes.
 """
 
 import json
+import os
 import re
 import sys
 import time
@@ -18,6 +19,16 @@ from pathlib import Path
 
 ARXIV_API = "http://export.arxiv.org/api/query"
 ATOM = "{http://www.w3.org/2005/Atom}"
+
+# --- Translation (English -> Chinese) -----------------------------------
+# Uses Google's public translate endpoint (no API key, stdlib only). Results
+# are cached in papers.json so we only translate papers we haven't seen before.
+TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
+TRANSLATE_TARGET = "zh-CN"
+# Max characters per translate request (endpoint is a GET, keep URLs sane).
+TRANSLATE_CHUNK = 1800
+# Set env SKIP_TRANSLATE=1 to skip translation (faster local runs).
+SKIP_TRANSLATE = os.environ.get("SKIP_TRANSLATE") == "1"
 
 # arXiv categories we care about (systems + ML for LLMs).
 CATEGORIES = ["cs.LG", "cs.CL", "cs.DC", "cs.AR", "cs.PF", "cs.AI"]
@@ -169,6 +180,106 @@ def clean_text(s: str) -> str:
     return re.sub(r"\s+", " ", s or "").strip()
 
 
+def _chunk_text(text: str, limit: int):
+    """Split text into <=limit char chunks, preferring sentence boundaries."""
+    text = text.strip()
+    if len(text) <= limit:
+        return [text] if text else []
+    parts = re.split(r"(?<=[.!?])\s+", text)
+    chunks, cur = [], ""
+    for p in parts:
+        if not p:
+            continue
+        if len(cur) + len(p) + 1 > limit and cur:
+            chunks.append(cur)
+            cur = p
+        else:
+            cur = (cur + " " + p).strip() if cur else p
+    if cur:
+        chunks.append(cur)
+    # A single sentence may still exceed the limit; hard-split those.
+    out = []
+    for c in chunks:
+        while len(c) > limit:
+            out.append(c[:limit])
+            c = c[limit:]
+        if c:
+            out.append(c)
+    return out
+
+
+def translate_text(text: str) -> str:
+    """Translate English text to Chinese. Returns "" on failure."""
+    text = clean_text(text)
+    if not text:
+        return ""
+    pieces = []
+    for chunk in _chunk_text(text, TRANSLATE_CHUNK):
+        params = urllib.parse.urlencode(
+            {
+                "client": "gtx",
+                "sl": "en",
+                "tl": TRANSLATE_TARGET,
+                "dt": "t",
+                "q": chunk,
+            }
+        )
+        url = f"{TRANSLATE_URL}?{params}"
+        raw = fetch(url)
+        data = json.loads(raw)
+        # data[0] is a list of [translated, original, ...] segments.
+        seg = "".join(part[0] for part in data[0] if part and part[0])
+        pieces.append(seg)
+        time.sleep(0.2)
+    return "".join(pieces).strip()
+
+
+def safe_translate(text: str) -> str:
+    try:
+        return translate_text(text)
+    except Exception as e:  # noqa: BLE001
+        print(f"[warn] translate failed: {e}", file=sys.stderr)
+        return ""
+
+
+def load_translation_cache(path: Path) -> dict:
+    """Map arxiv id -> {title_zh, summary_zh} from a previous run."""
+    try:
+        old = json.loads(path.read_text("utf-8"))
+    except Exception:  # noqa: BLE001
+        return {}
+    cache = {}
+    for p in old.get("papers", []):
+        pid = p.get("id")
+        if pid and (p.get("title_zh") or p.get("summary_zh")):
+            cache[pid] = {
+                "title_zh": p.get("title_zh", ""),
+                "summary_zh": p.get("summary_zh", ""),
+            }
+    return cache
+
+
+def translate_papers(papers: list, cache: dict):
+    total = len(papers)
+    done = 0
+    for i, p in enumerate(papers, 1):
+        prev = cache.get(p["id"])
+        if prev and prev.get("title_zh") and prev.get("summary_zh"):
+            p["title_zh"] = prev["title_zh"]
+            p["summary_zh"] = prev["summary_zh"]
+            continue
+        if SKIP_TRANSLATE:
+            p["title_zh"] = ""
+            p["summary_zh"] = ""
+            continue
+        print(f"[translate] {i}/{total} {p['id']}", file=sys.stderr)
+        p["title_zh"] = safe_translate(p["title"])
+        p["summary_zh"] = safe_translate(p["summary"])
+        done += 1
+    print(f"[translate] translated {done} new, reused {total - done}",
+          file=sys.stderr)
+
+
 def classify(paper: dict):
     text = f"{paper['title']} {paper['summary']}"
     topics = []
@@ -226,6 +337,11 @@ def main():
     papers.sort(key=lambda p: p["published"], reverse=True)
     papers = papers[:MAX_PAPERS]
 
+    # Translate to Chinese (reusing previously translated papers).
+    out_path = Path(__file__).parent / "data" / "papers.json"
+    cache = load_translation_cache(out_path)
+    translate_papers(papers, cache)
+
     # Topic counts for the filter UI.
     topic_counts = {}
     for p in papers:
@@ -243,7 +359,6 @@ def main():
         "papers": papers,
     }
 
-    out_path = Path(__file__).parent / "data" / "papers.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2), "utf-8")
     print(f"[done] wrote {len(papers)} papers to {out_path}", file=sys.stderr)

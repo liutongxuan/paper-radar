@@ -80,7 +80,9 @@
     const q = state.query.trim().toLowerCase();
     if (!q) return true;
     const hay = (
-      paper.title + " " + paper.summary + " " + paper.authors.join(" ")
+      paper.title + " " + (paper.title_zh || "") + " " +
+      paper.summary + " " + (paper.summary_zh || "") + " " +
+      paper.authors.join(" ")
     ).toLowerCase();
     return q.split(/\s+/).every((term) => hay.includes(term));
   }
@@ -103,19 +105,34 @@
       .map((c) => '<span class="tag sub">' + escapeHtml(c) + "</span>")
       .join("");
 
+    const titleZh = p.title_zh || p.title;
+    const hasZhTitle = !!p.title_zh && p.title_zh !== p.title;
+    const origTitle = hasZhTitle
+      ? '<p class="title-orig">' + escapeHtml(p.title) + "</p>"
+      : "";
+
+    const summaryZh = p.summary_zh || p.summary;
+    const hasZhSum = !!p.summary_zh && p.summary_zh !== p.summary;
+    const origSummary = hasZhSum
+      ? '<button class="toggle-orig">显示原文 ▾</button>' +
+        '<p class="summary-orig hidden">' + escapeHtml(p.summary) + "</p>"
+      : "";
+
     return (
       '<article class="card">' +
         '<div class="card-top">' +
           "<h2><a href=\"" + escapeHtml(p.abs_url) +
             "\" target=\"_blank\" rel=\"noopener\">" +
-            escapeHtml(p.title) + "</a></h2>" +
+            escapeHtml(titleZh) + "</a></h2>" +
           '<span class="date">' + fmtDate(p.published) +
             (isNew ? ' <span class="new">NEW</span>' : "") +
           "</span>" +
         "</div>" +
+        origTitle +
         '<p class="authors">' + escapeHtml(authors) + "</p>" +
-        '<p class="summary">' + escapeHtml(p.summary) + "</p>" +
+        '<p class="summary">' + escapeHtml(summaryZh) + "</p>" +
         '<button class="toggle-sum">展开摘要 ▾</button>' +
+        origSummary +
         '<div class="card-tags">' +
           primaryTag + otherTags + cats +
           '<span class="card-links">' +
@@ -151,6 +168,13 @@
       btn.addEventListener("click", () => {
         const expanded = summary.classList.toggle("expanded");
         btn.textContent = expanded ? "收起摘要 ▴" : "展开摘要 ▾";
+      });
+    });
+    els.papers.querySelectorAll(".toggle-orig").forEach((btn) => {
+      const orig = btn.nextElementSibling;
+      btn.addEventListener("click", () => {
+        const isHidden = orig.classList.toggle("hidden");
+        btn.textContent = isHidden ? "显示原文 ▾" : "收起原文 ▴";
       });
     });
   }
