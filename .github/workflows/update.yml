@@ -20,6 +20,12 @@ concurrency:
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      # Add repo secret CURSOR_API_KEY to enable LLM (codex) quality review via
+      # the Cursor SDK. Leave it unset and the script uses the offline
+      # heuristic score — no extra dependency is installed in that case.
+      CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,6 +34,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: Install LLM dependencies
+        # Only needed for LLM review; skipped entirely (saving a ~45MB download)
+        # when CURSOR_API_KEY is not configured.
+        if: ${{ env.CURSOR_API_KEY != '' }}
+        run: pip install -r requirements.txt
 
       - name: Fetch latest papers from arXiv
         run: python fetch_papers.py

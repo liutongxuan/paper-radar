@@ -109,16 +109,56 @@
 
     const q = p.quality;
     let qualityBadge = "";
+    let reviewBlock = "";
     if (q) {
       const stars = "★".repeat(q.stars) + "☆".repeat(5 - q.stars);
-      const tip = "质量评估 " + q.score + "/100 · " + q.label +
-        "\n" + (q.reasons || []).map((r) => "• " + r).join("\n");
+      const isLlm = q.source === "llm";
+      let tip;
+      if (isLlm) {
+        const dimNames = {
+          novelty: "创新", significance: "价值",
+          rigor: "严谨", clarity: "清晰",
+        };
+        const dims = q.dimensions || {};
+        const dimStr = Object.keys(dimNames)
+          .filter((k) => dims[k])
+          .map((k) => dimNames[k] + dims[k])
+          .join(" · ");
+        tip = "AI 评估（" + (q.model || "LLM") + "） " + q.score +
+          "/100 · " + q.label +
+          (dimStr ? "\n维度：" + dimStr : "") +
+          (q.pros && q.pros.length
+            ? "\n亮点：\n" + q.pros.map((r) => "• " + r).join("\n") : "") +
+          (q.cons && q.cons.length
+            ? "\n不足：\n" + q.cons.map((r) => "• " + r).join("\n") : "");
+      } else {
+        tip = "质量评估 " + q.score + "/100 · " + q.label +
+          "\n" + (q.reasons || []).map((r) => "• " + r).join("\n");
+      }
       qualityBadge =
         '<span class="qbadge q-' + q.tier + '" title="' +
         escapeHtml(tip) + '">' +
+        (isLlm ? '<span class="qai">AI</span>' : "") +
         '<span class="qstars">' + stars + "</span>" +
         '<span class="qscore">' + q.score + "</span>" +
         "</span>";
+
+      if (isLlm && q.verdict) {
+        const pros = (q.pros || [])
+          .map((r) => '<li class="pro">' + escapeHtml(r) + "</li>")
+          .join("");
+        const cons = (q.cons || [])
+          .map((r) => '<li class="con">' + escapeHtml(r) + "</li>")
+          .join("");
+        const list = pros || cons
+          ? '<ul class="review-points">' + pros + cons + "</ul>" : "";
+        reviewBlock =
+          '<div class="review">' +
+            '<span class="review-tag">AI 点评</span>' +
+            '<span class="review-verdict">' + escapeHtml(q.verdict) +
+            "</span>" + list +
+          "</div>";
+      }
     }
 
     const titleZh = p.title_zh || p.title;
@@ -152,6 +192,7 @@
         '<p class="summary">' + escapeHtml(summaryZh) + "</p>" +
         '<button class="toggle-sum">展开摘要 ▾</button>' +
         origSummary +
+        reviewBlock +
         '<div class="card-tags">' +
           primaryTag + otherTags + cats +
           '<span class="card-links">' +

@@ -32,6 +32,18 @@ TRANSLATE_CHUNK = 1800
 # Set env SKIP_TRANSLATE=1 to skip translation (faster local runs).
 SKIP_TRANSLATE = os.environ.get("SKIP_TRANSLATE") == "1"
 
+# --- LLM quality review (via Cursor SDK) --------------------------------
+# Optional: if CURSOR_API_KEY is set, each paper is graded by an LLM through
+# the Cursor SDK (`cursor-sdk`, requires Python 3.10+), using your Cursor
+# account / billing. Results are cached in papers.json (keyed by arXiv id) so
+# we only spend on new papers. Falls back to the offline heuristic score when
+# disabled or on any error.
+CURSOR_API_KEY = os.environ.get("CURSOR_API_KEY", "")
+# Model slug must be one your Cursor account can use — discover valid IDs with
+# `Cursor.models.list()`. Defaults to a codex model (cheaper than Opus).
+LLM_MODEL = os.environ.get("LLM_MODEL") or "gpt-5.3-codex"
+LLM_ENABLED = bool(CURSOR_API_KEY) and os.environ.get("SKIP_LLM") != "1"
+
 # arXiv categories we care about (systems + ML for LLMs).
 CATEGORIES = ["cs.LG", "cs.CL", "cs.DC", "cs.AR", "cs.PF", "cs.AI"]
 
@@ -369,16 +381,8 @@ def assess_quality(paper: dict) -> dict:
 
     score = max(0, min(100, score))
 
-    if score >= 82:
-        tier, label = "A", "高质量"
-    elif score >= 68:
-        tier, label = "B", "较高"
-    elif score >= 55:
-        tier, label = "C", "中等"
-    else:
-        tier, label = "D", "一般"
-
-    stars = max(1, min(5, round(score / 20)))
+    tier, label = grade_from_score(score)
+    stars = stars_from_score(score)
 
     if not reasons:
         reasons.append("基于相关性与元数据的基础评估")
@@ -389,7 +393,145 @@ def assess_quality(paper: dict) -> dict:
         "label": label,
         "stars": stars,
         "reasons": reasons,
+        "source": "heuristic",
     }
+
+
+def grade_from_score(score: int):
+    if score >= 82:
+        return "A", "高质量"
+    if score >= 68:
+        return "B", "较高"
+    if score >= 55:
+        return "C", "中等"
+    return "D", "一般"
+
+
+def stars_from_score(score: int) -> int:
+    return max(1, min(5, round(score / 20)))
+
+
+def _extract_json(text: str) -> dict:
+    """Pull the first JSON object out of an LLM response."""
+    text = (text or "").strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z]*\n?|\n?```$", "", text).strip()
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1:
+        raise ValueError("no JSON object in LLM response")
+    return json.loads(text[start:end + 1])
+
+
+def llm_assess(paper: dict) -> dict:
+    """Grade a paper via the Cursor SDK. Raises on failure (caller falls back).
+
+    Imported lazily so the rest of the pipeline still runs without cursor-sdk
+    installed (e.g. when LLM review is disabled).
+    """
+    from cursor_sdk import Agent, AgentOptions, LocalAgentOptions
+
+    system = (
+        "你是 LLM 推理服务与效率方向（serving/inference efficiency）的资深审稿人，"
+        "熟悉顶会（NeurIPS/ICML/ICLR/OSDI/MLSys 等）评审标准。"
+        "请依据论文标题与摘要，客观评估其质量与价值。"
+    )
+    user = (
+        f"标题：{paper.get('title', '')}\n"
+        f"摘要：{paper.get('summary', '')}\n\n"
+        "请只输出一个 JSON 对象（不要输出任何多余文字或代码块标记，也不要修改任何文件），"
+        "字段如下：\n"
+        '{\n'
+        '  "score": 0-100 的整数（综合质量分，严格评分，避免虚高）,\n'
+        '  "novelty": 1-5, "significance": 1-5, "rigor": 1-5, "clarity": 1-5,\n'
+        '  "verdict": "一句话中文总评（不超过40字）",\n'
+        '  "pros": ["中文亮点1", "中文亮点2"],\n'
+        '  "cons": ["中文不足或风险1"]\n'
+        '}'
+    )
+    result = Agent.prompt(
+        system + "\n\n" + user,
+        AgentOptions(
+            api_key=CURSOR_API_KEY,
+            model=LLM_MODEL,
+            local=LocalAgentOptions(cwd=str(Path(__file__).parent)),
+        ),
+    )
+    if getattr(result, "status", None) == "error":
+        raise RuntimeError(f"cursor run failed: {getattr(result, 'id', '?')}")
+    text = getattr(result, "result", None) or ""
+    data = _extract_json(text)
+
+    score = int(round(float(data.get("score", 0))))
+    score = max(0, min(100, score))
+    tier, label = grade_from_score(score)
+
+    def _dim(v):
+        try:
+            return max(1, min(5, int(round(float(v)))))
+        except (TypeError, ValueError):
+            return None
+
+    dims = {
+        k: _dim(data.get(k))
+        for k in ("novelty", "significance", "rigor", "clarity")
+    }
+    dims = {k: v for k, v in dims.items() if v is not None}
+
+    pros = [str(x).strip() for x in (data.get("pros") or []) if str(x).strip()]
+    cons = [str(x).strip() for x in (data.get("cons") or []) if str(x).strip()]
+    verdict = str(data.get("verdict", "")).strip()
+
+    return {
+        "score": score,
+        "tier": tier,
+        "label": label,
+        "stars": stars_from_score(score),
+        "verdict": verdict,
+        "pros": pros[:3],
+        "cons": cons[:2],
+        "dimensions": dims,
+        "source": "llm",
+        "model": LLM_MODEL,
+    }
+
+
+def load_llm_cache(path: Path) -> dict:
+    """Map arxiv id -> cached LLM quality dict from a previous run."""
+    try:
+        old = json.loads(path.read_text("utf-8"))
+    except Exception:  # noqa: BLE001
+        return {}
+    cache = {}
+    for p in old.get("papers", []):
+        q = p.get("quality")
+        if p.get("id") and isinstance(q, dict) and q.get("source") == "llm":
+            cache[p["id"]] = q
+    return cache
+
+
+def review_papers_with_llm(papers: list, cache: dict):
+    """Attach LLM quality to papers, reusing cache; fall back to heuristic."""
+    total = len(papers)
+    done = reused = failed = 0
+    for i, p in enumerate(papers, 1):
+        cached = cache.get(p["id"])
+        if cached:
+            p["quality"] = cached
+            reused += 1
+            continue
+        try:
+            print(f"[llm] {i}/{total} {p['id']}", file=sys.stderr)
+            p["quality"] = llm_assess(p)
+            done += 1
+            time.sleep(1)
+        except Exception as e:  # noqa: BLE001
+            failed += 1
+            print(f"[warn] llm assess failed for {p['id']}: {e}",
+                  file=sys.stderr)
+            # Keep the heuristic score already on the paper as fallback.
+    print(f"[llm] reviewed {done} new, reused {reused}, "
+          f"fell back {failed} (heuristic)", file=sys.stderr)
 
 
 def parse_date(s: str) -> datetime:
@@ -445,6 +587,15 @@ def main():
     out_path = Path(__file__).parent / "data" / "papers.json"
     cache = load_translation_cache(out_path)
     translate_papers(papers, cache)
+
+    # LLM quality review (optional; needs CURSOR_API_KEY + cursor-sdk). Each
+    # paper keeps its heuristic score as a fallback if the LLM is unavailable.
+    if LLM_ENABLED:
+        llm_cache = load_llm_cache(out_path)
+        review_papers_with_llm(papers, llm_cache)
+    else:
+        print("[llm] disabled (no CURSOR_API_KEY) — using heuristic scores",
+              file=sys.stderr)
 
     # Topic counts for the filter UI.
     topic_counts = {}
