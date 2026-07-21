@@ -7,7 +7,11 @@
     activeTopic: "all",
     query: "",
     sort: "date",
+    view: "latest",
   };
+
+  // Cache each dataset's JSON so switching tabs doesn't re-fetch.
+  const cache = { latest: null, archive: null };
 
   const els = {
     papers: document.getElementById("papers"),
@@ -95,7 +99,10 @@
         ? p.authors.slice(0, 6).join(", ") + " 等 " + p.authors.length + " 人"
         : p.authors.join(", ");
 
-    const isNew = p.age_days <= 2;
+    const ageDays = p.age_days != null
+      ? p.age_days
+      : (Date.now() - new Date(p.published).getTime()) / 86400000;
+    const isNew = ageDays <= 2;
     const primaryTag =
       '<span class="tag">' + escapeHtml(p.primary_topic) + "</span>";
     const otherTags = p.topics
@@ -268,29 +275,56 @@
     }, 120);
   });
 
-  async function load() {
+  async function fetchDataset(view) {
+    if (cache[view]) return cache[view];
+    const file = view === "archive" ? "data/archive.json" : "data/papers.json";
+    const res = await fetch(file + "?_=" + Date.now());
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    cache[view] = data;
+    return data;
+  }
+
+  async function setView(view) {
+    state.view = view;
+    document.querySelectorAll(".vtab").forEach((b) => {
+      b.classList.toggle("active", b.dataset.view === view);
+    });
     showSkeletons();
     try {
-      const res = await fetch("data/papers.json?_=" + Date.now());
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const data = await res.json();
+      const data = await fetchDataset(view);
       state.papers = data.papers || [];
       state.topics = data.topics || [];
+      // Drop a topic filter that doesn't exist in the new dataset.
+      if (state.activeTopic !== "all" &&
+          !state.topics.some((t) => t.name === state.activeTopic)) {
+        state.activeTopic = "all";
+      }
+      const ts = view === "archive" ? data.updated_at : data.generated_at;
       els.updated.textContent =
-        "更新于 " + fmtDate(data.generated_at) +
-        " · " + timeAgo(data.generated_at);
+        (view === "archive"
+          ? "历史归档 " + (data.count || state.papers.length) + " 篇 · 更新于 "
+          : "更新于 ") + fmtDate(ts) + " · " + timeAgo(ts);
       renderTopics();
       renderPapers();
     } catch (err) {
       els.papers.innerHTML = "";
       els.empty.classList.remove("hidden");
+      const file = view === "archive" ? "data/archive.json" : "data/papers.json";
       els.empty.innerHTML =
         "<p>无法加载论文数据（" + escapeHtml(String(err.message)) +
         "）。<br/>请先运行 <code>python3 fetch_papers.py</code> 生成 " +
-        "<code>data/papers.json</code>。</p>";
+        "<code>" + file + "</code>。</p>";
       els.updated.textContent = "加载失败";
     }
   }
 
-  load();
+  document.querySelectorAll(".vtab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (state.view === btn.dataset.view) return;
+      setView(btn.dataset.view);
+    });
+  });
+
+  setView("latest");
 })();

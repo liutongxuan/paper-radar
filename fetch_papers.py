@@ -261,20 +261,23 @@ def safe_translate(text: str) -> str:
         return ""
 
 
-def load_translation_cache(path: Path) -> dict:
-    """Map arxiv id -> {title_zh, summary_zh} from a previous run."""
-    try:
-        old = json.loads(path.read_text("utf-8"))
-    except Exception:  # noqa: BLE001
-        return {}
+def load_translation_cache(paths) -> dict:
+    """Map arxiv id -> {title_zh, summary_zh} from previous runs / archive."""
     cache = {}
-    for p in old.get("papers", []):
-        pid = p.get("id")
-        if pid and (p.get("title_zh") or p.get("summary_zh")):
-            cache[pid] = {
-                "title_zh": p.get("title_zh", ""),
-                "summary_zh": p.get("summary_zh", ""),
-            }
+    for path in paths:
+        try:
+            old = json.loads(Path(path).read_text("utf-8"))
+        except Exception:  # noqa: BLE001
+            continue
+        for p in old.get("papers", []):
+            pid = p.get("id")
+            if pid and pid not in cache and (
+                p.get("title_zh") or p.get("summary_zh")
+            ):
+                cache[pid] = {
+                    "title_zh": p.get("title_zh", ""),
+                    "summary_zh": p.get("summary_zh", ""),
+                }
     return cache
 
 
@@ -496,18 +499,73 @@ def llm_assess(paper: dict) -> dict:
     }
 
 
-def load_llm_cache(path: Path) -> dict:
-    """Map arxiv id -> cached LLM quality dict from a previous run."""
-    try:
-        old = json.loads(path.read_text("utf-8"))
-    except Exception:  # noqa: BLE001
-        return {}
+def load_llm_cache(paths) -> dict:
+    """Map arxiv id -> cached LLM quality dict from previous runs / archive."""
     cache = {}
-    for p in old.get("papers", []):
-        q = p.get("quality")
-        if p.get("id") and isinstance(q, dict) and q.get("source") == "llm":
-            cache[p["id"]] = q
+    for path in paths:
+        try:
+            old = json.loads(Path(path).read_text("utf-8"))
+        except Exception:  # noqa: BLE001
+            continue
+        for p in old.get("papers", []):
+            pid = p.get("id")
+            q = p.get("quality")
+            if pid and pid not in cache and isinstance(q, dict) \
+                    and q.get("source") == "llm":
+                cache[pid] = q
     return cache
+
+
+def update_archive(archive_path: Path, papers: list, now: datetime):
+    """Merge the current feed into a cumulative archive (never drops papers).
+
+    The archive keeps every paper we've ever processed — with its translation
+    and quality review — so the site can browse historical papers, and so
+    translations/scores are never recomputed once a paper leaves the live feed.
+    """
+    existing = {}
+    try:
+        old = json.loads(archive_path.read_text("utf-8"))
+        for p in old.get("papers", []):
+            if p.get("id"):
+                existing[p["id"]] = p
+    except Exception:  # noqa: BLE001
+        pass
+
+    now_s = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    for p in papers:
+        rec = dict(p)
+        prev = existing.get(p["id"]) or {}
+        rec["first_seen"] = prev.get("first_seen") or now_s
+        rec["last_updated"] = now_s
+        # age_days is only meaningful for the live feed; recomputed in the UI.
+        rec.pop("age_days", None)
+        existing[p["id"]] = rec
+
+    arr = sorted(
+        existing.values(), key=lambda x: x.get("published", ""), reverse=True
+    )
+    topic_counts = {}
+    for p in arr:
+        for t in p.get("topics", []):
+            topic_counts[t] = topic_counts.get(t, 0) + 1
+
+    out = {
+        "updated_at": now_s,
+        "count": len(arr),
+        "topics": [
+            {"name": t, "count": topic_counts.get(t, 0)}
+            for t in TOPIC_KEYWORDS
+            if topic_counts.get(t, 0) > 0
+        ],
+        "papers": arr,
+    }
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    archive_path.write_text(
+        json.dumps(out, ensure_ascii=False, indent=2), "utf-8"
+    )
+    print(f"[archive] {len(arr)} papers total -> {archive_path}",
+          file=sys.stderr)
 
 
 def review_papers_with_llm(papers: list, cache: dict):
@@ -583,15 +641,18 @@ def main():
     papers.sort(key=lambda p: p["published"], reverse=True)
     papers = papers[:MAX_PAPERS]
 
-    # Translate to Chinese (reusing previously translated papers).
-    out_path = Path(__file__).parent / "data" / "papers.json"
-    cache = load_translation_cache(out_path)
+    # Translate to Chinese (reusing previously translated papers + archive).
+    data_dir = Path(__file__).parent / "data"
+    out_path = data_dir / "papers.json"
+    archive_path = data_dir / "archive.json"
+    cache_sources = [out_path, archive_path]
+    cache = load_translation_cache(cache_sources)
     translate_papers(papers, cache)
 
     # LLM quality review (optional; needs CURSOR_API_KEY + cursor-sdk). Each
     # paper keeps its heuristic score as a fallback if the LLM is unavailable.
     if LLM_ENABLED:
-        llm_cache = load_llm_cache(out_path)
+        llm_cache = load_llm_cache(cache_sources)
         review_papers_with_llm(papers, llm_cache)
     else:
         print("[llm] disabled (no CURSOR_API_KEY) — using heuristic scores",
@@ -617,6 +678,9 @@ def main():
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2), "utf-8")
     print(f"[done] wrote {len(papers)} papers to {out_path}", file=sys.stderr)
+
+    # Persist everything we've ever seen into the cumulative archive.
+    update_archive(archive_path, papers, now)
 
 
 if __name__ == "__main__":
