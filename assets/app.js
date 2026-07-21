@@ -6,6 +6,7 @@
     topics: [],
     activeTopic: "all",
     query: "",
+    sort: "date",
   };
 
   const els = {
@@ -15,6 +16,7 @@
     updated: document.getElementById("updated"),
     stats: document.getElementById("stats"),
     empty: document.getElementById("empty"),
+    sort: document.getElementById("sort"),
   };
 
   function showSkeletons() {
@@ -105,6 +107,20 @@
       .map((c) => '<span class="tag sub">' + escapeHtml(c) + "</span>")
       .join("");
 
+    const q = p.quality;
+    let qualityBadge = "";
+    if (q) {
+      const stars = "★".repeat(q.stars) + "☆".repeat(5 - q.stars);
+      const tip = "质量评估 " + q.score + "/100 · " + q.label +
+        "\n" + (q.reasons || []).map((r) => "• " + r).join("\n");
+      qualityBadge =
+        '<span class="qbadge q-' + q.tier + '" title="' +
+        escapeHtml(tip) + '">' +
+        '<span class="qstars">' + stars + "</span>" +
+        '<span class="qscore">' + q.score + "</span>" +
+        "</span>";
+    }
+
     const titleZh = p.title_zh || p.title;
     const hasZhTitle = !!p.title_zh && p.title_zh !== p.title;
     const origTitle = hasZhTitle
@@ -124,8 +140,11 @@
           "<h2><a href=\"" + escapeHtml(p.abs_url) +
             "\" target=\"_blank\" rel=\"noopener\">" +
             escapeHtml(titleZh) + "</a></h2>" +
-          '<span class="date">' + fmtDate(p.published) +
-            (isNew ? ' <span class="new">NEW</span>' : "") +
+          '<span class="meta-right">' +
+            qualityBadge +
+            '<span class="date">' + fmtDate(p.published) +
+              (isNew ? ' <span class="new">NEW</span>' : "") +
+            "</span>" +
           "</span>" +
         "</div>" +
         origTitle +
@@ -148,8 +167,22 @@
     );
   }
 
+  function sortPapers(list) {
+    if (state.sort === "quality") {
+      return list.slice().sort((a, b) => {
+        const qa = (a.quality && a.quality.score) || 0;
+        const qb = (b.quality && b.quality.score) || 0;
+        if (qb !== qa) return qb - qa;
+        return new Date(b.published) - new Date(a.published);
+      });
+    }
+    return list.slice().sort(
+      (a, b) => new Date(b.published) - new Date(a.published)
+    );
+  }
+
   function renderPapers() {
-    const list = state.papers.filter(matches);
+    const list = sortPapers(state.papers.filter(matches));
     if (!list.length) {
       els.papers.innerHTML = "";
       els.empty.classList.remove("hidden");
@@ -178,6 +211,11 @@
       });
     });
   }
+
+  els.sort.addEventListener("change", (e) => {
+    state.sort = e.target.value;
+    renderPapers();
+  });
 
   let searchTimer = null;
   els.search.addEventListener("input", (e) => {

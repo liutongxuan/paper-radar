@@ -19,6 +19,8 @@ from pathlib import Path
 
 ARXIV_API = "http://export.arxiv.org/api/query"
 ATOM = "{http://www.w3.org/2005/Atom}"
+# arXiv's own metadata namespace (holds <comment> and <journal_ref>).
+ARXIV_NS = "{http://arxiv.org/schemas/atom}"
 
 # --- Translation (English -> Chinese) -----------------------------------
 # Uses Google's public translate endpoint (no API key, stdlib only). Results
@@ -163,6 +165,9 @@ def parse_entries(xml_text: str):
             elif link.get("rel") == "alternate":
                 abs_url = link.get("href", abs_url)
 
+        comment = clean_text(entry.findtext(f"{ARXIV_NS}comment", ""))
+        journal_ref = clean_text(entry.findtext(f"{ARXIV_NS}journal_ref", ""))
+
         yield {
             "id": arxiv_id,
             "title": title,
@@ -173,6 +178,8 @@ def parse_entries(xml_text: str):
             "categories": categories,
             "abs_url": abs_url,
             "pdf_url": pdf_url,
+            "comment": comment,
+            "journal_ref": journal_ref,
         }
 
 
@@ -289,6 +296,102 @@ def classify(paper: dict):
     return topics
 
 
+# Top-tier venues (ML + systems) used as a strong quality signal when found in
+# the arXiv comment / journal_ref fields.
+TOP_VENUES = [
+    "neurips", "nips", "icml", "iclr", "aaai", "ijcai", "acl", "emnlp",
+    "naacl", "coling", "cvpr", "iccv", "eccv", "kdd", "sigir", "www",
+    "the web conference", "osdi", "sosp", "mlsys", "nsdi", "asplos", "isca",
+    "micro", "hpca", "usenix atc", "eurosys", "ppopp", "vldb", "sigmod",
+    "fast", "tpds", "jmlr", "tmlr",
+]
+
+
+def assess_quality(paper: dict) -> dict:
+    """Heuristic, offline paper-quality score (0-100) from arXiv metadata.
+
+    Transparent signals only — no external API or model needed. Each hit adds
+    points and a human-readable reason shown in the UI tooltip.
+    """
+    text = f"{paper.get('title', '')} {paper.get('summary', '')}".lower()
+    meta = f"{paper.get('comment', '')} {paper.get('journal_ref', '')}".lower()
+    both = f"{text} {meta}"
+
+    score = 45  # neutral baseline
+    reasons = []
+
+    venue = next((v for v in TOP_VENUES if v in meta), None)
+    if venue:
+        score += 28
+        reasons.append(f"发表于顶级会议/期刊（{venue.upper()}）")
+    elif re.search(r"accept(ed)?\b|to appear|camera[- ]?ready", meta):
+        score += 16
+        reasons.append("论文已被会议/期刊接收")
+
+    if re.search(r"github\.com|code (is )?(available|released)|"
+                 r"open[- ]?source|we release|project page", both):
+        score += 12
+        reasons.append("提供开源代码/项目主页")
+
+    if re.search(r"\d+(\.\d+)?\s?[x×](\s|-)?(faster|speedup|speed-up|"
+                 r"higher|throughput|less|lower)?", text):
+        score += 9
+        reasons.append("报告显著加速/性能提升")
+
+    if re.search(r"state[- ]of[- ]the[- ]art|\bsota\b|outperform", text):
+        score += 8
+        reasons.append("宣称达到 SOTA 或超越基线")
+
+    if re.search(r"\b(mmlu|gsm8k|humaneval|mt-?bench|longbench|bbh|"
+                 r"hellaswag|arena|alpacaeval)\b", text):
+        score += 5
+        reasons.append("在知名基准上评测")
+
+    if re.search(r"\b(70b|72b|405b|175b|65b|340b|236b|671b)\b", text):
+        score += 4
+        reasons.append("在大规模模型上验证")
+
+    n_authors = len(paper.get("authors", []))
+    if n_authors >= 6:
+        score += 4
+        reasons.append("多机构/大团队合作")
+    elif n_authors >= 3:
+        score += 2
+
+    if len(paper.get("topics", [])) >= 3:
+        score += 3
+        reasons.append("覆盖多个效率主题")
+
+    # Freshly revised papers (v2+) often reflect peer feedback.
+    if re.search(r"v[2-9]\d*$", paper.get("abs_url", "")):
+        score += 2
+        reasons.append("已修订更新")
+
+    score = max(0, min(100, score))
+
+    if score >= 82:
+        tier, label = "A", "高质量"
+    elif score >= 68:
+        tier, label = "B", "较高"
+    elif score >= 55:
+        tier, label = "C", "中等"
+    else:
+        tier, label = "D", "一般"
+
+    stars = max(1, min(5, round(score / 20)))
+
+    if not reasons:
+        reasons.append("基于相关性与元数据的基础评估")
+
+    return {
+        "score": score,
+        "tier": tier,
+        "label": label,
+        "stars": stars,
+        "reasons": reasons,
+    }
+
+
 def parse_date(s: str) -> datetime:
     try:
         return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(
@@ -331,6 +434,7 @@ def main():
         paper["topics"] = topics
         paper["primary_topic"] = topics[0]
         paper["age_days"] = age_days
+        paper["quality"] = assess_quality(paper)
         papers.append(paper)
 
     # Newest first.

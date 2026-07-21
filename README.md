@@ -8,6 +8,8 @@
 
 - **自动抓取**：从 arXiv 官方 API 拉取最近 45 天内的相关论文。
 - **智能分类**：按主题自动打标签（LLM Serving / KV Cache / Quantization / Speculative Decoding / MoE / Long Context / Attention & Kernels / Efficient Inference 等）。
+- **中文翻译**：抓取时自动把标题、摘要译成中文（前端默认中文，保留英文原文），无需 API key。
+- **质量评估**：基于 arXiv 元数据启发式打分（0–100，A/B/C/D 分级），综合会议录用、开源代码、加速/SOTA 结论、知名基准、模型规模、团队规模等信号；卡片显示星级徽章（悬停看评分理由），支持按质量排序。
 - **现代化 UI**：暗色主题、主题筛选、实时关键词搜索、可展开摘要、arXiv/PDF 直链、NEW 标记。
 - **零依赖**：抓取脚本只用 Python 标准库；前端无框架、纯 HTML/CSS/JS。
 - **每日自动更新**：GitHub Actions 定时任务每天抓取一次并部署到 GitHub Pages。
