@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-29T07:45:18Z",
+  "generated_at": "2026-08-30T06:23:09Z",
   "count": 120,
   "topics": [
     {
@@ -66,7 +66,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -89,8 +89,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "TwinKV：通过成对密钥冗余进行 KV 缓存驱逐的可组合修复通道",
+      "summary_zh": "长上下文推理受到键值 (KV) 缓存的内存占用的瓶颈，特别是对于资源预算紧张的小型模型。现有的 KV 缓存驱逐方法使用模型的注意力分布来对令牌进行评分，或者在无注意力变体中，使用每个键与全局参考点的距离来对令牌进行评分。使用受控的留一法探针，我们发现注意力大小与令牌对答案的因果贡献无关（Spearman $ρ=-0.004$），挑战了主导驱逐方法背后的前提。我们引入了 TwinKV，这是一种无需训练、无需注意的冗余信号，可检测令牌的密钥在上下文中的其他位置是否有近乎重复的内容。 TwinKV 不是替换现有的策略，而是充当可组合的修复过程：给定策略的固定保留集，它识别没有幸存重复项的被逐出令牌（\\emph{orphans}）和其信息在其他地方重复的保留令牌（\\emph{冗余捐赠者}），然后交换它们，同时保留原始预算和评分规则。我们将 TwinKV 与 LongBench、LooGLE、RULER 的四种最新驱逐策略以及压缩率 ${0.3,0.5,0.7}$ 的短上下文 MMLU-Pro 无害控制组合在一起。在 Qwen3-4B 上，TwinKV 改进了两个策略的大部分配置，第三个策略几乎持平，并且仅帮助了已经接近性能上限的第四个自适应基线的少数配置；三种无上限政策的收益在最宽松的比例下是最小的。然而，在带有 Llama-3.2-1B 的 RULER 上，第四个策略在每个评估的单元中都有所改进，因为它的单独分数留下了很大的改进空间。更广泛地说，与 Qwen3-4B 相比，Llama-3.2-1B 显示出较小的平均 LongBench 增益，但在 LongBench 和 LooGLE 上改进的单元比例较高，并且在 RULER 上获胜。我们还将小样本分类示例确定为任务结构，其中 TwinKV 对任一模型都没有帮助。"
     },
     {
       "id": "2608.26523",
@@ -125,7 +125,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -148,8 +148,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "VPP：长上下文 LLM 推理中高效分块预填充的虚拟管道并行性",
+      "summary_zh": "分块预填充管道并行性 (CPP) 是 LLM 推理的关键技术。然而，相同大小的块表现出不平衡的延迟，因为后面的块会参加更长的前缀 KV 缓存并产生更高的注意力成本，从而导致管道泡沫。现有方法通过动态块调整大小（动态 CPP、DCPP）来缓解这种不平衡，但我们的测量表明，这会牺牲调度开销来实现负载平衡，这对于长序列来说变得不利。在本研究中，我们提出了虚拟管道并行（VPP），它保持块大小固定并通过虚拟阶段优化管道布局。 V 形虚拟阶段遍历将每个块昂贵的中间阶段与其邻居的较轻的头部和尾部阶段重叠，而异步通信和管道打包进一步减少了通信停顿和交叉请求漏气泡。我们在 vLLM-Ascend 中实现 VPP，并在三个基于 MoE 的 LLM 上对其进行评估，在 16 个 Ascend 910C NPU 上使用高达 1M 令牌的序列。在长序列上，VPP 的吞吐量比 DCPP 提高了 13.1%，在混合工作负载上提高了 6.7%，同时保持了短序列的性能。在 512K 个代币 DeepSeek-V3.1 预填充工作负载上，VPP 将管道气泡率从 6.4% 降低到 0.1%，与 DCPP 相比降低了 98.0%。"
     },
     {
       "id": "2608.26004",
@@ -179,7 +179,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -203,8 +203,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "AsymSpec：代理 LLM 的上下文不对称推测解码",
+      "summary_zh": "随着检索、工具使用和多轮交互中上下文的积累，代理法学硕士管道面临着不断上升的推理成本。为了控制延迟，部署通常会压缩输入，但这会降低任务的准确性。推测解码 (SD) 无损地加速生成，但它假设起草者和验证者共享相同的上下文，从而阻止 SD 解决准确性开销权衡问题。我们提出了 AsymSpec，一种打破这种对称性的非对称推测解码框架：轻量级起草者读取完整输入，而大型验证者对压缩视图进行操作。起草者通过 logits 的对比 $δ$ 融合来引导验证者，并通过分歧感知接受门进行调制，以保持验证稳定性和高草稿接受率。经过四个代理功能和两个端到端代理基准测试的评估，AsymSpec 的全上下文准确度平均达到 $\\约 90\\%$，吞吐量加速 $1.3$--$1.7\\times$，而孤立文本功能的计算成本为 $0.2$--$0.3\\times$。这些结果表明，当压缩丢弃关键推理信号时，非对称上下文访问恰恰会产生巨大的收益。"
     },
     {
       "id": "2608.25683",
@@ -238,7 +238,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -261,8 +261,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "psRL：通过训练时间前缀共享对代理 AI 进行高效训练",
+      "summary_zh": "在现代代理人工智能训练中，系统瓶颈正在从部署转向更新。树结构和逐步强化学习等新兴采样策略极大地增加了训练样本量，同时产生相对较低的边际部署成本，导致更新阶段主导了端到端执行时间。至关重要的是，这种转变暴露了一个新的优化机会，因为生产跟踪显示训练样本中存在大量前缀冗余。在本文中，我们提出了 psRL（强化学习的前缀共享），这是一种用于代理 AI 的新训练系统，旨在利用训练样本之间的前缀冗余。利用更新阶段固有的全局可见性和数据不变性，psRL 实现了分布式训练的高效工作负载调度和内存管理。具体来说，psRL 引入了两种新颖的前缀共享机制，可以在 GPU 工作线程之间实现灵活、细粒度的工作负载分配，同时优化前缀重用并实现负载平衡。此外，psRL 实现了一个新的底层 KV 缓存管理器，有助于自适应块大小分配和动态 KV 缓存，最大限度地提高内存利用率，同时保持高前缀命中率。使用生产跟踪进行的评估表明，psRL 的吞吐量比现有系统高出 5.2 倍。源代码将很快公开。"
     },
     {
       "id": "2608.25523",
@@ -289,7 +289,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -312,8 +312,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "TOPAS：多代理 LLM 服务的工作流感知前缀状态调度",
+      "summary_zh": "前缀缓存在多代理大语言模型 (LLM) 服务中引入了一个基本权衡：为代理保留较长的系统提示键值 (KV) 缓存可以加速未来的调用，但会减少可用于批处理并发请求的 GPU 内存。在多阶段工作流中，现有的调度程序倾向于优先考虑直接前缀位置或整体工作流进度。然而，在共享 KV 缓存预算下，单独优化任一目标都可以通过下游延迟或频繁的前缀替换来延长任务级作业完成时间 (JCT)。为了取得平衡，我们在这里提出 TOPAS，一种面向任务的前缀感知调度程序，它共同决定哪些代理前缀保留在缓存中以及哪些请求要调度执行。 TOPAS 通过权衡每个任务最长剩余服务路径的预期减少与下游前缀重用的近期收益，并考虑前缀移动和抢占的成本，对候选决策后状态进行评分。还结合了任务级老化机制来防止饥饿。我们在 SGLang 框架内实施 TOPAS，并评估其在三个合成 DAG 和两个 MetaGPT 软件开发工作流程上的性能。与每个工作负载和指标的最佳性能基线相比，TOPAS 在合成工作负载上将平均/p99 JCT 降低了 39.8%/49.4%，同时在 MetaGPT-SOP 上将平均 JCT 降低了 9.8%，在 MetaGPT-TL 上将平均/p99 JCT 降低了 22.0%/26.6%。"
     },
     {
       "id": "2608.25380",
@@ -342,7 +342,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Quantization",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -365,8 +365,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "APT：通过注意力概率引导的剪枝和量化加速扩散变压器",
+      "summary_zh": "生成人工智能的最新进展显着增加了对高分辨率图像和视频生成的需求，将扩散模型定位为核心技术。其中，扩散变压器（DiTs）因其可扩展性和输出质量而成为最先进的（SOTA）模型。然而，DiT 中的自注意力会产生大量的计算开销，随着复杂性随着输出分辨率的四次方而增长，导致延迟过长。虽然之前的工作尝试使用稀疏性和量化技术来减轻这种成本，但它们未能有效降低高分辨率 DiT 中的计算成本。在本文中，我们提出了 APT，一种用于高分辨率 DiT 的软硬件联合设计加速器。 APT 利用注意力概率作为统一的重要性度量，通过细粒度剪枝和自适应精度缩放来联合优化计算。在算法层面，我们提出了注意力概率引导的自适应双阈值（APDT），它使用双阈值动态地执行元素选择和精度分配。为了确保与内存高效的 FlashAttention 的兼容性，我们引入了时间步感知 FlashAttention (TAFA)，它通过利用时间相似性来预测跨时间步的注意力概率。在架构层面，我们共同设计了一款专用加速器，可有效支持不规则稀疏性和双精度执行，具有动态掩码管理、地址转换、双精度计算单元和基于图块的数据流。最后，我们在 SOTA DiT 模型上评估 APT，包括 PixArt-$α$、Stable Diffusion 3 和 FLUX。与 NVIDIA A100 相比，APT 的加速速度高达 8.16$\\times$，能效提高 14.98$\\times$；与 SOTA 扩散模型加速器 EXION 相比，加速速度高达 3.01$\\times$，能效提高 2.04$\\times$。"
     },
     {
       "id": "2608.25230",
@@ -390,7 +390,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 82,
         "tier": "A",
@@ -413,8 +413,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "相信质量：KV 缓存驱逐中的强制权重",
+      "summary_zh": "每个部署的稀疏注意力或 KV 缓存驱逐规则都会保留键的子集，丢弃其余部分，并在保留的集合上重新规范化注意力权重。枚举来自五个模型的 $168{,}192$ 注意力行的约束下的确切最佳子集表明，保持最大权重已经接近最佳，因为最佳子集仅缩小了与完全注意力的剩余差距的中位数 $2$ 到 $5\\%$。如果选择关闭得这么少，则逐出方法之间已发布的边距必须来自其他地方，因此我们测量每个方法持有的字节数。在共享评估管道中，最强的与查询无关的方法保留完整的缓存，因为它们的每头选择存储为掩码，并且只有不规则的每头存储才能释放该内存。对一项固定选择执行名义预算需要花费 14 美元到 62 美元的基准点。我们将 87.6 美元点的检索余量追踪到问题可见时计算的排名。 ContourKV 是一种根据质量下降统计数据构建的免训练分配器，与现有技术相比，在 160 美元的配对比较中赢得了 93 美元，在预算执行基线的字节数上损失了 22 美元，并且与其中最强的一个并列。"
     },
     {
       "id": "2608.25096",
@@ -441,7 +441,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Long Context",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -464,8 +464,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "了解跨上下文长度和注意力架构的大型语言模型推理的能量缩放",
+      "summary_zh": "大型语言模型 (LLM) 的日益普及引发了人们对推理的能源消耗和环境影响的日益担忧。本文对代表性开源 LLM 的解码阶段能耗进行了系统的实证研究，采用多头注意力 (MHA)、分组查询注意力 (GQA) 和带有滑动窗口注意力 (SWA) 的分组查询注意力，以表征注意力架构如何在不同的推理工作负载下影响解码阶段的能耗。我们评估了不同上下文长度、批量大小和生成工作负载的四种模型，同时使用 NVIDIA 硬件计数器测量 GPU 能量。我们研究了上下文长度、注意力机制、键值 (KV) 缓存增长和批处理对解码阶段能耗的影响。结果表明，注意力机制是控制解码能量如何随上下文长度变化的主要因素。 MHA 模型表现出比 GQA 模型更陡峭的能量增长，而带有 SWA 的 GQA 保持几乎恒定的能量消耗。我们进一步表明，模型大小主要决定绝对能耗，而批处理可减少每个生成令牌的能耗​​和请求延迟高达 87%。这些发现为选择节能的 LLM 架构和推理配置提供了实用指导。"
     },
     {
       "id": "2608.25062",
@@ -501,7 +501,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -524,8 +524,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "FLINT：有效利用高带宽闪存实现容量可扩展的 LLM 推理加速",
+      "summary_zh": "LLM 推理越来越受到加速器内存容量而非计算吞吐量的限制。这种限制在单加速器和小节点推理系统中尤其严重，其中有限的封装内存容量限制了可部署模型的大小。 HBF 是一种新兴的 3D 堆叠 NAND 闪存技术，可提供数 TB 的近加速器容量，使其成为存储 LLM 权重的有前景的容量层。然而，现有的基于 HBF 的提案面临三个采用挑战：(1) 依赖于 LLM 权重的粗粒度静态预取，旨在隐藏 NAND 闪存设备的微秒级读取延迟，同时最大化 HBF 的读取吞吐量；(2) 将 NAND 闪存管理任务（例如刷新操作）暴露给加速器可见的关键推理路径；(3) 错过针对工作负载行为专门化和优化闪存管理机制的优化机会。我们的目标是设计一种高效的 HBF 基板，将 HBF 作为内存容量层与 HBM 集成，同时解决这三个挑战。为此，我们提出了 FLINT，一种工作负载驱动的 HBF 基底，用于容量可扩展的 LLM 推理。 FLINT 引入了三种机制：(1) 硬件突发缓冲区控制器，动态合并和管道化 HBF 读取，旨在利用现有 NAND 闪存缓冲区，同时维持高 HBF 带宽；(2) 幻像平面刷新机制，通过低成本资源复制将与刷新相关的 NAND 闪存操作移回读取前台，从而从关键推理路径中删除刷新；(3) 只读 FTL，用紧凑型文件替换对任意写入的 SSD 级支持。将逻辑权重突发转换为物理 HBF 位置的表。"
     },
     {
       "id": "2608.24650",
@@ -554,7 +554,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -578,8 +578,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "Simthesizer：LLM 服务系统的代理驱动模拟框架",
+      "summary_zh": "系统级仿真是探索法学硕士服务系统快速扩展设计空间的重要工具，而真正的部署仍然成本高昂且往往不可行。然而，现代法学硕士服务现在的发展速度比人类驱动的模拟器开发可以跟踪的速度要快，并且从代理工作流程到分类服务的新兴工作负载和机制不再适合现有模拟器假设的整体模拟管道。因此，每一种新机制都需要进行侵入式重写，从而在部署的服务系统和对其进行建模的模拟器之间留下越来越大的开发差距。为了弥补这一差距，我们提出了 Simthesizer，一个实现代理驱动模拟器开发的框架。 Simthesizer 引入了一个可组合的模拟器基础设施，它统一表达了完整的服务工作流程，包括协调它的控制决策，并将其实现为 Simthesizer 模拟器中的统一动态图。然后，合成器代理（一种利用的编码代理）将自然语言功能请求降低到模拟器特定护栏和保真度验证下的抽象上，从而发展一个共享模拟器，而不是为每个功能构建一个新模拟器。在相同的编码代理和工具下，基于 Simthesizer 构建的扩展遵循基于 vLLM 的真实系统，平均吞吐量误差为 2.51%，而基于现有模拟器构建的扩展为 6.03%。在相同的工作负载上，Simthesizer 的模拟速度分别比两种最先进的模拟器 LLMServingSim2.0 和 Vidur 快 284.96 倍和 23.19 倍。"
     },
     {
       "id": "2608.24411",
@@ -605,7 +605,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -628,8 +628,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "ResiSpec：通过残差分布整形增强多候选推测采样",
+      "summary_zh": "大型语言模型 (LLM) 服务的效率从根本上受到自回归解码的顺序性质的限制。推测解码 (SD) 通过使用轻量级草稿模型来推测未来的令牌，然后由 LLM 在单个并行前向传递中进行验证，从而缓解了这一问题。为了进一步提高效率，多候选方案提出了不同的候选集，以增加令牌接受的可能性。然而，我们表明这些方案受到残余漂移的瓶颈：拒绝初始候选会导致残余目标分布偏离草稿模型的预测的现象。这种转变使得后续候选者无效，并迫使系统进行昂贵的重采样。为了解决这个问题，我们提出了 ResiSpec，这是一个框架，可以在验证期间战略性地改革提案分布，以将剩余目标质量锚定在草稿模型的高置信度区域内。通过在不影响输出准确性的情况下以数学方式重新调整验证过程，ResiSpec 可以防止候选对象过时，并比最先进的多候选方法实现高达 1.92$\\times$ 的加速。代码可在 https://github.com/Czzzzk/Resispec 获取。"
     },
     {
       "id": "2608.24063",
@@ -658,7 +658,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 73,
         "tier": "B",
@@ -682,8 +682,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "VisCache：视觉 KV 缓存修剪，实现高效视觉大语言模型推理",
+      "summary_zh": "虽然视觉大型语言模型 (VLLM) 在多模态推理方面取得了显着的成功，但由于视觉键值 (KV) 缓存的大量计算和内存开销，其长上下文推理仍然非常昂贵。现有的 KV 压缩方法通常在视觉标记和层之间应用统一的剪枝，导致大量的信息丢失和性能下降。为了解决这一挑战，我们提出了 \\textbf{VisCache}，这是一种即插即用的框架，用于从粗到细的 \\textbf{Vis}ual KV \\textbf{Cache} 剪枝，无需训练，它由两个协同阶段组成。首先，轻量级 VLM 通过有选择地转发语义信息关键帧来过滤时间冗余。其次，我们介绍 {PruneKV}，一种针对 VLLM 的注意力动态而定制的外科 KV 压缩算法。与严格的剪枝策略不同，PruneKV 采用抛物线分层预算分配以及非对称更新机制，在融合值的同时选择性地剪枝键，从而保留关键的上下文信息。大量实验表明，VisCache 显着提高了推理效率，实现了高达 {2.35$\\times$ 的加速} 并显着减少了内存，同时保持了具有竞争力的性能，仅保留了 {19--28\\%} KV 缓存保留。 VisCache 始终优于现有基准，在长上下文 VLLM 推理的效率和性能之间建立了新的 Pareto 前沿。代码可在 https://github.com/Wlklk/VisCache 获取"
     },
     {
       "id": "2608.24004",
@@ -713,7 +713,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -736,8 +736,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "AgentSpec：LLM 代理批量推理的推测解码",
+      "summary_zh": "基于大型语言模型 (LLM) 的代理应用程序通常会导致较长的响应时间。推测性解码是一种很有前途的解决方案，可以在不影响生成质量的情况下提高 LLM 代理的推理效率。然而，最先进的推测解码算法在大批量大小下表现出显着的速度下降，限制了它们在现实世界代理应用程序中部署的有效性。在这项工作中，我们首先对 LLM 代理的推测解码进行了系统分析，并确定了加速退化的两个主要因素：推测令牌的高拒绝率和动态令牌预算的利用不足。基于这些观察，我们提出了 AgentSpec，一种推测解码算法，它解决了 LLM 代理现有方法的局限性。 AgentSpec 结合了结构隔离的起草，将推测限制在代理工作流程的语义连贯部分，减少了不相关语义路径的草案并实现极低的拒绝率。此外，AgentSpec 采用冗余感知预算分配，利用代理级信息，在代理推理过程中更好地利用动态释放的令牌预算。我们在 vLLM 中四个不同 LLM 系列的五种不同工作负载和四种不同模型上实施和评估 AgentSpec。我们的结果证明了 AgentSpec 相对于最先进技术的优越性。"
     },
     {
       "id": "2608.23962",
@@ -770,7 +770,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -793,8 +793,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "更多 GPU 还是更小的缓存？内存绑定 LLM 服务的张量并行与 KV 压缩",
+      "summary_zh": "当 LLM 服务部署耗尽 KVcache 空间时，有两种行之有效的解决方法。张量并行性将权重和 KV 缓存分片到两个、四个或八个设备上，以每层全部归约的价格购买内存空间，并且硬件费用随着设备数量的增加而增加。算法社区缩小了缓存，通过 KV 量化和逐出保留单个 GPU，并花费一点质量。压缩论文报告内存比率，并行扩展论文报告吞吐量曲线，几乎没有人将两者放在同一成本轴上。我们将张量并行配置（1 到 8 级）和 KV 压缩配置（16/8/4 位，保持比低至 0.25）放置在一个成本归一化轴上，使用在 A100、A40 和 H100 硬件上校准的配置文件模拟器，将每百万代币的成本与延迟进行比较，然后我们继续寻找成本等价交叉。我们没有找到。在两种模型（7B 和 70B 的 Llama-2）、三种 GPU 类型以及我们可以构建的各个级别的内存释放中，压缩成本降低了 1.20 倍到 2.00 倍。 80 GB 设备上的 7B 模型无法在其自己的上下文窗口内耗尽其 KV 预算，并且决定策略之间的边界是相对于设备内存的模型大小，对于 80 GB 卡大约为 36B 参数。在这堵墙之下，压缩占主导地位，额外的 GPU 很大程度上被浪费了；在它上面，张量并行不再是一种选择，而是一张入场券：Llama-2-70B 在任何 KV 设置的 A100 上都不可行，因为绑定资源是权重，而 KV 压缩不涉及权重。张量并行性是改善延迟的唯一杠杆（压缩通过批处理争用使每个令牌的延迟更糟，达 8% 到 93%），而压缩是唯一可以使每美元容量倍增的杠杆（16.5 倍，而 GPU 支出为 8 倍则为 1.21 倍）。"
     },
     {
       "id": "2608.23843",
@@ -821,7 +821,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -844,8 +844,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "PuzzleKV：KV 缓存压缩的按页低阶分解",
+      "summary_zh": "大型语言模型 (LLM) 中的长上下文推理越来越受到键值 (KV) 缓存所需内存的限制。 KV 缓存压缩通过减少先前令牌的存储成本来解决这个问题。在现有方法中，低秩压缩特别有吸引力，因为它以减少的维度表示每个标记。以前的低秩方法通常从模型权重导出固定投影空间，从校准激活构造固定空间，或者在广泛的缓存区域上构造共享基础。此类表示可能无法捕获详细但重要的信息。我们将每个头 KV 缓存划分为固定长度的逻辑页面，并观察各个页面内的大量低等级结构。基于这一观察，我们提出了 PuzzleKV，一种无需训练和校准的方法，它将每个完成的页面视为一个独立的压缩单元。 PuzzleKV 分解每层和 KV 头中的页面，直接计算密集和分解页面的注意力，并在自回归解码期间增量压缩新的合格页面。跨模型、上下文长度和基准的实验证明了 PuzzleKV 在匹配的存储预算下的有效性。 PuzzleKV 的性能约为原始 KV 缓存存储的 60%，在评估的模型和所有基准设置上实现了超过 96% 的 Full KV 性能，在 RULER 上比 Global SVD 有显着的提升，在 LongBench 上具有竞争性的性能。为了实现更激进的压缩比，PuzzleKV 可以进一步与量化相结合，同时仅使用 18.7% 的原始存储即可保留 93% 以上的 Full KV 性能。"
     },
     {
       "id": "2608.23834",
@@ -872,7 +872,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -895,8 +895,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "Minima-KV：具有混合格式分页注意力的保留保留 KV 缓存压缩",
+      "summary_zh": "键值 (KV) 缓存是长上下文 LLM 服务中的主要容量和带宽瓶颈。我们提出了 Minima-KV，一种用于混合格式分页注意力的保留保留层次结构。最近的和受保护的锚页面仍保留在 FP8 中，而较旧的非锚页面则移至打包的 TQ3；每个实时请求页面仍然是可寻址的。特定于格式的内核计算部分注意力状态，并通过全局标准化的在线 softmax 合并将它们组合起来，从而实现直接异构解码，而无需缓存大小的密集阴影。在单个 96 GB NVIDIA RTX PRO 6000 Blackwell GPU 上的独立配置绑定 Qwen3.6-27B 配置文件中，部署统计报告每个活动令牌有 18.3 KiB 的注意力 KV，相当于相对于 BF16 的 3.50 倍压缩和相对于 FP8 的 1.75 倍压缩。物化的质量概况与其对 16K RULER 大海捞针任务的密集控制相匹配。在相同的 503 个问题 LongBench v2 集上，在 16K、32K 和 64K 处测得的增量分别为 -0.80、-0.60 和 -0.40 个百分点。具有两个 59,008 个令牌请求的单独单对直接解码金丝雀测量相对于其控制的 3.625 倍主动 KV 压缩和 0.9821 倍吞吐量，路由所有 16 个全注意力层而无需回退，并且不保留密集阴影。这些结果建立了一个实用的混合格式路径，用于压缩长上下文状态而不逐出实时请求 KV 页面。"
     },
     {
       "id": "2608.23565",
@@ -929,7 +929,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -952,8 +952,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "ReWorld：具有长视野记忆的交互式世界模型",
+      "summary_zh": "交互式世界模型必须跟随用户的操作，记住它所显示的位置，并实时传输。这种张力是结构性的：控制想要短期的视野，记忆想要无限的视野。 ReWorld 在训练期间将两者分开，并在推理时限制它们。混合的每个头部注意力窗口将大多数头部限制在最近的过去，而一小部分全局头部参与整个历史，并且随机头部路由使任一能力都不会绑定到特定头部；随机块丢弃使得稀疏历史分布均匀。推断整个过去的生活都在固定预算下：由姿势索引地标库支持的有界 KV 缓存，模型从中检索最接近当前姿势的地标。公制尺度对齐的数据引擎将八个源（虚幻渲染的飞越、游戏漫游和现实世界的镜头）放置在一个物理动作尺度上，因此相同的按键使每个源中的摄像机移动相同的距离，回文轨迹提供了记忆训练所需的重访证据。然后，仅限于 LoRA 适配器的分布匹配蒸馏将采样压缩为四个步骤：一个骨干网同时服务于高保真多步骤模式和实时交互式模式，在逼真、游戏风格和风格化的世界中传输 704x1280 视频。在涵盖动作跟踪、长视野回忆和视频质量的三轴协议下，针对最近的六种交互式世界模型，它获得了最佳控制保真度（11.95美元^\\circ$旋转误差和最佳相机运动一致性）和最佳生成质量；在长达一分钟的往返部署中（$64$\\,s，$384$潜伏），其固定的12块缓存仍然会重新生成起始视图——在部署长度上，滑动窗口早已驱逐了证据，并且全KV注意力耗尽了内存。"
     },
     {
       "id": "2608.23463",
@@ -976,7 +976,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -1028,7 +1028,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Long Context",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -1052,8 +1052,8 @@
         "source": "llm",
         "model": "gpt-5.3-codex"
       },
-      "title_zh": "",
-      "summary_zh": ""
+      "title_zh": "ChebBooster：一种通过切比雪夫启发的外推法进行高效扩散变压器推理的免训练方法",
+      "summary_zh": "扩散变压器 (DiT) 在高保真图像生成方面表现出了强大的性能，但由于每个时间步都执行完整的模型，其采样过程仍然需要大量计算。虽然已经探索了基于缓存的加速来降低推理成本，但简单的重用方案在较长的时间间隔内精度较低，并且基于泰勒级数的外推方法经常面临由龙格振荡引起的不稳定。在本文中，我们提出了 ChebBooster，这是一种基于切比雪夫多项式理论的免训练外推框架，可以实现 DiT 的稳定高效加速。具体来说，我们采用重心公式来评估具有高数值稳定性和最小开销的切比雪夫近似，并将外推进一步解耦为离线权重预计算阶段和轻量级在线应用阶段。对三种基于 DiT 的代表性模型（包括 DiT-XL/2、PixArt-$Σ$ 和 FLUX.1-dev）的广泛实验表明，ChebBooster 在视觉质量和推理效率方面实现了持续改进，延迟加速高达 $3.68\\times$，FLOPs 减少高达 $5.12\\times$，在不同的生成任务和分辨率下优于现有的免训练基线。"
     },
     {
       "id": "2608.23658",
@@ -1078,7 +1078,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -1126,7 +1126,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -1182,7 +1182,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Long Context",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -1237,7 +1237,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -1302,7 +1302,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 82,
         "tier": "A",
@@ -1357,7 +1357,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 67,
         "tier": "C",
@@ -1412,7 +1412,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -1465,7 +1465,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -1521,7 +1521,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -1576,7 +1576,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -1625,7 +1625,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -1680,7 +1680,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 66,
         "tier": "C",
@@ -1733,7 +1733,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -1786,7 +1786,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -1835,7 +1835,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -1896,7 +1896,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -1950,7 +1950,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -1999,7 +1999,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -2052,7 +2052,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -2103,7 +2103,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -2159,7 +2159,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -2208,7 +2208,7 @@
         "Quantization"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -2258,7 +2258,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -2308,7 +2308,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -2369,7 +2369,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2426,7 +2426,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -2481,7 +2481,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2532,7 +2532,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Quantization",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -2582,7 +2582,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -2633,7 +2633,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -2682,7 +2682,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 10,
+      "age_days": 11,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2730,7 +2730,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 10,
+      "age_days": 11,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -2786,7 +2786,7 @@
         "Long Context"
       ],
       "primary_topic": "Long Context",
-      "age_days": 10,
+      "age_days": 11,
       "quality": {
         "score": 73,
         "tier": "B",
@@ -2841,7 +2841,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 11,
+      "age_days": 12,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2904,7 +2904,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 11,
+      "age_days": 12,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -2954,7 +2954,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 11,
+      "age_days": 12,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -3005,7 +3005,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 11,
+      "age_days": 12,
       "quality": {
         "score": 73,
         "tier": "B",
@@ -3060,7 +3060,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 12,
+      "age_days": 13,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -3108,7 +3108,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 12,
+      "age_days": 13,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -3158,7 +3158,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 12,
+      "age_days": 13,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -3215,7 +3215,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 12,
+      "age_days": 13,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -3370,7 +3370,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 82,
         "tier": "A",
@@ -3417,7 +3417,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 71,
         "tier": "B",
@@ -3465,7 +3465,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "Sparsity / MoE",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -3515,7 +3515,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 66,
         "tier": "C",
@@ -3572,7 +3572,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -3621,7 +3621,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -3683,7 +3683,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -3732,7 +3732,7 @@
         "Quantization"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 13,
+      "age_days": 14,
       "quality": {
         "score": 67,
         "tier": "C",
@@ -3782,7 +3782,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 14,
+      "age_days": 15,
       "quality": {
         "score": 70,
         "tier": "B",
@@ -3831,7 +3831,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 14,
+      "age_days": 15,
       "quality": {
         "score": 71,
         "tier": "B",
@@ -3882,7 +3882,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 14,
+      "age_days": 15,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -3937,7 +3937,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 14,
+      "age_days": 15,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -3992,7 +3992,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -4047,7 +4047,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -4115,7 +4115,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 69,
         "tier": "B",
@@ -4166,7 +4166,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -4339,7 +4339,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 66,
         "tier": "C",
@@ -4390,7 +4390,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -4447,7 +4447,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -4505,7 +4505,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 57,
         "tier": "C",
@@ -4555,7 +4555,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 67,
         "tier": "C",
@@ -4612,7 +4612,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -4662,7 +4662,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 15,
+      "age_days": 16,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -4866,7 +4866,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 17,
+      "age_days": 18,
       "quality": {
         "score": 83,
         "tier": "A",
@@ -4920,7 +4920,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 17,
+      "age_days": 18,
       "quality": {
         "score": 83,
         "tier": "A",
@@ -4971,7 +4971,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 17,
+      "age_days": 18,
       "quality": {
         "score": 69,
         "tier": "B",
@@ -5026,7 +5026,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Long Context",
-      "age_days": 17,
+      "age_days": 18,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -5081,7 +5081,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 17,
+      "age_days": 18,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -5181,7 +5181,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 62,
         "tier": "C",
@@ -5233,7 +5233,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5292,7 +5292,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 82,
         "tier": "A",
@@ -5343,7 +5343,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -5396,7 +5396,7 @@
         "Quantization"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5446,7 +5446,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5498,7 +5498,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5547,7 +5547,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 18,
+      "age_days": 19,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -5622,7 +5622,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Sparsity / MoE",
-      "age_days": 19,
+      "age_days": 20,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -5675,7 +5675,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 19,
+      "age_days": 20,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5726,7 +5726,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 19,
+      "age_days": 20,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -5780,7 +5780,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 19,
+      "age_days": 20,
       "quality": {
         "score": 77,
         "tier": "B",
@@ -5831,7 +5831,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 19,
+      "age_days": 20,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5887,7 +5887,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 19,
+      "age_days": 20,
       "quality": {
         "score": 73,
         "tier": "B",
@@ -5945,7 +5945,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 19,
+      "age_days": 20,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -6000,7 +6000,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 20,
+      "age_days": 21,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -6053,7 +6053,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 20,
+      "age_days": 21,
       "quality": {
         "score": 73,
         "tier": "B",
@@ -6114,7 +6114,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 20,
+      "age_days": 21,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -6169,7 +6169,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 22,
+      "age_days": 23,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -6223,7 +6223,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 22,
+      "age_days": 23,
       "quality": {
         "score": 70,
         "tier": "B",
@@ -6275,7 +6275,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 22,
+      "age_days": 23,
       "quality": {
         "score": 63,
         "tier": "C",
@@ -6324,7 +6324,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 23,
+      "age_days": 24,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -6379,7 +6379,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 23,
+      "age_days": 24,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -6431,7 +6431,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Sparsity / MoE",
-      "age_days": 23,
+      "age_days": 24,
       "quality": {
         "score": 56,
         "tier": "C",
@@ -6486,7 +6486,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 23,
+      "age_days": 24,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -6537,7 +6537,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 23,
+      "age_days": 24,
       "quality": {
         "score": 78,
         "tier": "B",
