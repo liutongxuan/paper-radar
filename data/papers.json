@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-03T07:44:35Z",
+  "generated_at": "2026-11-04T07:22:29Z",
   "count": 120,
   "topics": [
     {
       "name": "LLM Serving",
-      "count": 48
+      "count": 49
     },
     {
       "name": "KV Cache",
-      "count": 48
+      "count": 52
     },
     {
       "name": "Quantization",
-      "count": 20
+      "count": 24
     },
     {
       "name": "Speculative Decoding",
@@ -20,11 +20,11 @@
     },
     {
       "name": "Sparsity / MoE",
-      "count": 20
+      "count": 24
     },
     {
       "name": "Long Context",
-      "count": 30
+      "count": 35
     },
     {
       "name": "Attention & Kernels",
@@ -32,14 +32,780 @@
     },
     {
       "name": "Efficient Inference",
-      "count": 52
+      "count": 51
     },
     {
       "name": "Training Efficiency",
-      "count": 14
+      "count": 13
     }
   ],
   "papers": [
+    {
+      "id": "2611.05345",
+      "title": "Adversarial Speculative Reasoning Improves Long Horizon Agents",
+      "authors": [
+        "Hongyin Luo",
+        "Wei Fang",
+        "Lijie Yang",
+        "Owen Stepan",
+        "Daniel Suit",
+        "Jeff Krapf",
+        "Dana Wensberg",
+        "Jack O'Brien"
+      ],
+      "summary": "Speculative decoding has been treated purely as a systems optimization that speeds up large language model decoding without changing the model behavior. Under this view, the growing effort to train better draft models has been focused solely on acceptance rate. We argue that this view does not hold true for long-horizon agent reasoning. Measuring frontier open-weight models on complex agentic tasks with different speculative decoding approaches, we found that numerical noise grows within verification windows, and the draft acceptance results of the thinking process can change the output distribution of the model after 30 steps, thus noticeably influencing the reasoning accuracy of long-horizon agents in random directions. In this work, we improve the reasoning capability of target models by controlling such noise. While we cannot change the overall token distribution verified by the target model, we can encode critical reasoning with highest precision by training the draft model to be rejected. We identify these points in agent traces and train the draft model to favor adversarial preference. At inference the trained draft and the target part ways precisely at these decision points, verification restarts, so that critical thinking tokens are sampled from the target model and encoded under its least noisy conditions. This approach makes critical reasoning better indexed and more durable over a long horizon. On complex agentic coding benchmarks, our approach raises end-to-end success rate with no change to the target model or its output distribution. Our results recast the speculative decoding mechanism from a pure accelerator into an active allocator for context precision that improves the accuracy of long-horizon agents by training 0.06% to 0.28% of hosted parameters.",
+      "published": "2026-11-03T18:45:23Z",
+      "updated": "2026-11-03T18:45:23Z",
+      "categories": [
+        "cs.AI"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.05345v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.05345v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "Speculative Decoding"
+      ],
+      "primary_topic": "Speculative Decoding",
+      "age_days": 0,
+      "quality": {
+        "score": 72,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "观点新颖且潜在影响大，但证据链仍偏薄。",
+        "pros": [
+          "将 speculative decoding 从加速机制扩展为“精度分配器”，问题定义有新意",
+          "面向长程 agent 推理误差累积提出可操作训练策略，参数改动比例小、部署吸引力强"
+        ],
+        "cons": [
+          "摘要中关键因果链（噪声增长→分布偏移→成功率提升）缺少定量与统计显著性信息，严谨性不足",
+          "“不改变输出分布”与“可影响后续分布/准确率”表述存在张力，理论边界尚不清晰"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 2,
+          "clarity": 3
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "对抗性推测推理改善了长视野智能体",
+      "summary_zh": "推测解码纯粹被视为一种系统优化，可以在不改变模型行为的情况下加速大型语言模型解码。根据这种观点，越来越多的训练更好选秀模型的努力仅仅集中在接受率上。我们认为，这种观点对于长期代理推理来说并不成立。使用不同的推测性解码方法测量复杂代理任务上的前沿开放权重模型，我们发现数值噪声在验证窗口内增长，并且思维过程的草稿接受结果可以在 30 个步骤后改变模型的输出分布，从而显着影响长视野代理在随机方向上的推理准确性。在这项工作中，我们通过控制此类噪声来提高目标模型的推理能力。虽然我们无法改变目标模型验证的整体令牌分布，但我们可以通过训练要拒绝的草稿模型来以最高精度编码关键推理。我们在代理追踪中识别这些点，并训练草稿模型以支持对抗性偏好。在推理时，经过训练的草稿和目标在这些决策点精确分开，验证重新启动，以便从目标模型中采样批判性思维标记，并在其噪声最小的条件下进行编码。这种方法使批判性推理能够更好地建立索引，并且从长远来看更持久。在复杂的代理编码基准上，我们的方法提高了端到端的成功率，而不改变目标模型或其输出分布。我们的结果将推测性解码机制从纯粹的加速器改造成上下文精度的主动分配器，通过训练 0.06% 到 0.28% 的托管参数来提高长视野代理的准确性。"
+    },
+    {
+      "id": "2611.05304",
+      "title": "LoopVQ: Sub 1-bit KV Cache Quantization for Looped Transformers",
+      "authors": [
+        "Minsoo Cheong",
+        "Sungjoo Yoo"
+      ],
+      "summary": "Looped transformers are a parameter-efficient alternative to standard transformers for language modeling. By reapplying the same layers across multiple loop steps, recent looped language models match the performance of non-looped models several times their size. While this architecture effectively reduces parameter memory, each loop step still stores its own keys and values, so the key-value (KV) cache grows linearly with the number of loop steps and becomes the main memory bottleneck. We observe that the KV cache of looped models is highly redundant along the loop axis and that the loop steps differ substantially in their sensitivity to quantization. Based on these observations, we propose $\\textbf{LoopVQ}$, a KV cache vector quantization method for looped transformers that codes channels of multiple loop steps jointly, and fine-tunes the codebooks to match the output of the full-precision model. At 0.5 bits per element, LoopVQ outperforms existing KV cache vector quantization methods for standard LLMs on general, long chain-of-thought reasoning, and long-context retrieval tasks with Ouro and Huginn models. Its design is orthogonal to these methods, and combined with TaSQ, it retains much of the BF16 accuracy even at 0.25 bits per element. We also implement LoopVQ in SGLang, where it nearly halves the decode latency at a 32K-token context and raises the peak serving throughput by up to $4.3\\times$ and $6.1\\times$ on the 1.4B and 2.6B Ouro models compared to the BF16 baseline.",
+      "published": "2026-11-03T18:16:29Z",
+      "updated": "2026-11-03T18:16:29Z",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.05304v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.05304v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "KV Cache",
+        "Quantization",
+        "Long Context",
+        "Efficient Inference",
+        "Training Efficiency"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 0,
+      "quality": {
+        "score": 78,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "问题切中痛点，方法实用但证据仍待补强。",
+        "pros": [
+          "抓住 looped Transformer 的KV缓存主瓶颈并利用跨loop冗余，方法针对性强",
+          "在极低比特下报告了精度与吞吐双收益，且已在SGLang实现，工程价值高"
+        ],
+        "cons": [
+          "摘要未交代训练/微调开销、稳定性与统计显著性，泛化到更多模型与硬件的证据不足"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "LoopVQ：循环变压器的亚 1 位 KV 缓存量化",
+      "summary_zh": "循环变压器是语言建模标准变压器的参数高效替代方案。通过在多个循环步骤中重新应用相同的层，最近的循环语言模型的性能可与非循环模型的性能相媲美数倍。虽然这种架构有效地减少了参数内存，但每个循环步骤仍然存储自己的键和值，因此键值（KV）缓存随着循环步骤的数量线性增长，并成为主内存瓶颈。我们观察到循环模型的 KV 缓存沿循环轴高度冗余，并且循环步骤对量化的敏感度差异很大。基于这些观察，我们提出了 $\\textbf{LoopVQ}$，一种用于循环变压器的 KV 缓存矢量量化方法，它对多个循环步骤的通道进行联合编码，并对码本进行微调以匹配全精度模型的输出。在每个元素 0.5 位的情况下，LoopVQ 在通用、长思想链推理以及使用 Ouro 和 Huginn 模型的长上下文检索任务方面优于标准 LLM 的现有 KV 缓存矢量量化方法。它的设计与这些方法正交，并与 TaSQ 相结合，即使在每个元素 0.25 位的情况下，它也保留了大部分 BF16 精度。我们还在 SGLang 中实现了 LoopVQ，与 BF16 基线相比，它在 32K 令牌上下文中将解码延迟几乎减半，并将 1.4B 和 2.6B Ouro 模型的峰值服务吞吐量提高了 4.3\\times$ 和 6.1\\times$。"
+    },
+    {
+      "id": "2611.04807",
+      "title": "Asymptotic Optimality of $cμ$-Rule for LLM Inference Scheduling under Memory Constraint",
+      "authors": [
+        "Zhenghao Li",
+        "Shengbo Wang",
+        "Nian Si"
+      ],
+      "summary": "Large language model (LLM) inference, the process by which a pre-trained model receives an input prompt and generates output tokens sequentially, has become increasingly important with the widespread deployment of LLM-based applications. As inference workloads continue to scale, GPU memory has emerged as a critical bottleneck: the long input prompts and generation sequences common in agentic and reasoning workloads lead to substantial key-value (KV) cache usage. In this paper, we study the resulting online scheduling problem from a queueing perspective. Requests arrive stochastically with heterogeneous prompt and output lengths, undergo prefill and autoregressive decode, and compete for a finite KV-cache capacity. Unlike classical queueing models, the duration of a processing step depends on both prefill computation and KV-cache I/O, so service capacity is jointly determined by computation, memory access, and memory occupancy. We develop a fluid model that reduces the system to a multiclass single-server queue with effective service rates capturing computation, memory access, and memory capacity. This fluid analysis yields a $cμ$ priority rule, where the effective service rate $μ$ is jointly determined by computational speed, memory bandwidth, and memory capacity. We prove that this rule minimizes cumulative holding cost in the fluid model and, for a finite workload, also minimizes completion time and maximizes full-run output-token throughput. We then construct a feasible scheduling policy for the original finite system and prove that its scaled dynamics converge to the optimal fluid policy. Finally, experiments on a real LLM serving engine using an NVIDIA H800 show that practical implementations of the proposed priority rule substantially reduce average latency while maintaining high throughput relative to existing scheduling policies.",
+      "published": "2026-11-03T12:41:05Z",
+      "updated": "2026-11-03T12:41:05Z",
+      "categories": [
+        "math.OC",
+        "cs.AI"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04807v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04807v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "KV Cache",
+        "Efficient Inference"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 0,
+      "quality": {
+        "score": 78,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "问题切中痛点，理论扎实但方法增量偏强。",
+        "pros": [
+          "聚焦KV缓存受限调度这一LLM推理核心瓶颈，问题重要性高。",
+          "从流体模型到可实现策略再到H800实证，形成较完整理论-系统闭环。"
+        ],
+        "cons": [
+          "核心结论基于经典cμ框架延展，原创性主要在建模细化与工程映射，潜在边界条件与泛化性仍需更充分验证。"
+        ],
+        "dimensions": {
+          "novelty": 3,
+          "significance": 4,
+          "rigor": 4,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "内存约束下LLM推理调度$cμ$规则的渐近最优性",
+      "summary_zh": "随着基于 LLM 的应用程序的广泛部署，大型语言模型 (LLM) 推理（预训练模型接收输入提示并顺序生成输出标记的过程）变得越来越重要。随着推理工作负载不断扩展，GPU 内存已成为关键瓶颈：代理和推理工作负载中常见的长输入提示和生成序列导致大量键值 (KV) 缓存使用。在本文中，我们从排队的角度研究由此产生的在线调度问题。请求以异构提示和输出长度随机到达，进行预填充和自回归解码，并竞争有限的 KV 缓存容量。与经典排队模型不同，处理步骤的持续时间取决于预填充计算和 KV-cache I/O，因此服务容量由计算、内存访问和内存占用共同决定。我们开发了一种流体模型，可将系统简化为多类单服务器队列，并具有捕获计算、内存访问和内存容量的有效服务率。这种流体分析产生 $cμ$ 优先级规则，其中有效服务速率 $μ$ 由计算速度、内存带宽和内存容量共同确定。我们证明，该规则最大限度地减少了流体模型中的累积持有成本，并且对于有限的工作负载，还最大限度地减少了完成时间并最大化了完整运行的输出令牌吞吐量。然后，我们为原始有限系统构建了可行的调度策略，并证明其缩放动态收敛于最优流体策略。最后，使用 NVIDIA H800 在真实的 LLM 服务引擎上进行的实验表明，所提出的优先级规则的实际实现大大减少了平均延迟，同时保持了相对于现有调度策略的高吞吐量。"
+    },
+    {
+      "id": "2611.04671",
+      "title": "LeanSparse: Memory-Efficient Serving for Native Sparse-Attention LLMs",
+      "authors": [
+        "Zaifeng Pan",
+        "Chris Wu",
+        "Xinwei Qiang",
+        "Zhengding Hu",
+        "Zhongkai Yu",
+        "Yufei Ding"
+      ],
+      "summary": "Sparse attention limits the history read by each query, but serving long contexts still requires substantial GPU memory. Existing KV offloading systems retain the full history of indexer keys on GPU, limiting decode concurrency. Prefill's temporary memory demand can further delay admission even when enough memory remains for the same request's subsequent decode. We present LeanSparse, a serving system that reduces both decode's persistent memory use and prefill's temporary memory demand. Our design exploits two observations: prefill consumes historical data one layer at a time, and decode can identify promising candidates before comparing their original indexer scores. During prefill, LeanSparse streams layer histories through two reusable GPU buffers, overlapping next-layer loading with ongoing model computation. During decode, coarse-to-fine indexing searches compact representations and retrieves original indexer keys only for candidate refinement. Separate indexer key and KV caches reuse data across generation steps. We implement LeanSparse in SGLang and evaluate it on DeepSeek-V4-Flash. At 950K context length, LeanSparse supports 2.95$\\times$ as many concurrent requests and achieves 2.14$\\times$ decode throughput over HiSparse. On multi-turn Open-SWE traces, it reduces median time to first token from 21.6 to 0.6s and median session completion time by 17.7% relative to ECHO.",
+      "published": "2026-11-03T10:55:47Z",
+      "updated": "2026-11-03T10:55:47Z",
+      "categories": [
+        "cs.DC"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04671v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04671v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "KV Cache",
+        "Sparsity / MoE",
+        "Long Context",
+        "Efficient Inference"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 0,
+      "quality": {
+        "score": 79,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "工程价值高，但方法与证据仍需更扎实",
+        "pros": [
+          "同时优化prefill临时显存与decode常驻显存，问题切中长上下文服务瓶颈",
+          "给出高并发与吞吐提升及真实多轮轨迹收益，系统实用性较强"
+        ],
+        "cons": [
+          "摘要缺少关键消融、精度代价与跨模型泛化细节，严谨性与可复现性仍有风险"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "LeanSparse：原生稀疏注意力 LLM 的内存高效服务",
+      "summary_zh": "稀疏注意力限制了每个查询读取的历史记录，但服务长上下文仍然需要大量 GPU 内存。现有的 KV 卸载系统保留 GPU 上索引器键的完整历史记录，从而限制了解码并发性。即使有足够的内存用于同一请求的后续解码，预填充的临时内存需求也会进一步延迟准入。我们推出 LeanSparse，这是一个服务系统，可以减少解码的持久内存使用和预填充的临时内存需求。我们的设计利用了两个观察结果：预填充一次消耗一层历史数据，而解码可以在比较原始索引器分数之前识别有希望的候选者。在预填充期间，LeanSparse 通过两个可重用的 GPU 缓冲区流式传输层历史记录，将下一层加载与正在进行的模型计算重叠。在解码期间，从粗到细的索引搜索紧凑表示并检索原始索引器键，仅用于候选细化。单独的索引器键和 KV 缓存可跨生成步骤重用数据。我们在 SGLang 中实现 LeanSparse 并在 DeepSeek-V4-Flash 上对其进行评估。在 950K 上下文长度下，LeanSparse 支持 2.95$\\time$ 的并发请求，并实现比 HiSparse 2.14$\\times$ 的解码吞吐量。在多轮 Open-SWE 跟踪中，相对于 ECHO，它将第一个令牌的中值时间从 21.6 秒减少到 0.6 秒，并将会话完成时间中值减少 17.7%。"
+    },
+    {
+      "id": "2611.04447",
+      "title": "Formalizing PTX in Lean to Prove GPU Kernel Correctness",
+      "authors": [
+        "Luk Koska",
+        "Tom Koska",
+        "Ben Koska"
+      ],
+      "summary": "We present an approach to mathematically formalizing PTX, an approach that allows modeling and reasoning about patterns common in GPU kernels for Deep Learning, including acquire-release, tensor cores, proxies, async operations, multi-kernel pipelines and data-dependent control flow. We implement it in Lean and use it to prove the correctness of simple implementations of a WGMMA GEMM kernel, FlashAttention, and a 3-kernel MoE pipeline.",
+      "published": "2026-11-03T07:37:20Z",
+      "updated": "2026-11-03T07:37:20Z",
+      "categories": [
+        "cs.AI"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04447v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04447v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "Sparsity / MoE",
+        "Attention & Kernels"
+      ],
+      "primary_topic": "Sparsity / MoE",
+      "age_days": 0,
+      "quality": {
+        "score": 74,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "选题重要且方法扎实，但证据范围仍偏有限。",
+        "pros": [
+          "将PTX在Lean中形式化，覆盖GPU内核关键并发与异步语义",
+          "以WGMMA/FlashAttention/MoE管线示例验证方法具备现实相关性"
+        ],
+        "cons": [
+          "摘要未说明形式化边界、自动化程度与证明规模，外部可复现性和通用性风险较高",
+          "案例看似代表性强但可能仍属简化实现，离生产级内核正确性证明尚有距离"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 4,
+          "clarity": 3
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "在 Lean 中形式化 PTX 以证明 GPU 内核的正确性",
+      "summary_zh": "我们提出了一种以数学形式化 PTX 的方法，该方法允许对深度学习 GPU 内核中常见的模式进行建模和推理，包括获取-释放、张量核心、代理、异步操作、多内核管道和数据相关控制流。我们在 Lean 中实现它，并用它来证明 WGMMA GEMM 内核、FlashAttention 和 3 内核 MoE 管道的简单实现的正确性。"
+    },
+    {
+      "id": "2611.04382",
+      "title": "Beyond Compression Ratio: High-Throughput KV Compression for Disaggregated LLM Serving",
+      "authors": [
+        "Junhong Wu",
+        "Zedong Liu",
+        "Xinyang Ma",
+        "Yuhan Chen",
+        "Guangming Tan",
+        "Dingwen Tao"
+      ],
+      "summary": "KV cache compression reduces the communication volume of disaggregated large language model serving, but its practical benefit depends not only on compression ratio and model quality, but also on how efficiently the compression pipeline executes. This requirement becomes increasingly important as modern serving systems adopt high-bandwidth interconnects, where inefficient compression can offset a substantial portion of the saved communication time. This paper presents \\system, a high-throughput KV cache compression data path built on top of \\kvserve. \\system improves compression execution in two complementary ways. First, it fuses the distribution transformation and low-bit quantization stages into a KV-aware \\tilelang kernel, eliminating intermediate tensor materialization and redundant memory accesses. Second, it replaces the original lossless compression backend with an open, extensible, and searchable backend based on \\lc, enabling high-performance compression operator pipelines. The fused kernel achieves up to $5.9\\times$ speedup, while the new lossless backend increases compression throughput from below 90~GB/s to over 500~GB/s. Across the evaluated workloads, \\system reduces job completion time by up to $2.04\\times$. End-to-end evaluation shows that these optimizations allow KV compression to retain meaningful communication benefits under modern high-bandwidth network.",
+      "published": "2026-11-03T06:13:07Z",
+      "updated": "2026-11-03T06:13:07Z",
+      "categories": [
+        "cs.DC"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04382v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04382v1",
+      "comment": "Accepted by The 22nd Annual IFIP International Conference on Network and Parallel Computing (NPC 2026)",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "KV Cache",
+        "Quantization",
+        "Efficient Inference"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 1,
+      "quality": {
+        "score": 79,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "工程价值突出，但方法新颖性中等且证据仍需补强",
+        "pros": [
+          "问题定位准确，抓住高带宽互连下压缩执行开销瓶颈",
+          "端到端与分组件收益明确，吞吐与作业时延改善幅度可观"
+        ],
+        "cons": [
+          "核心贡献偏系统实现优化，算法层面新意有限",
+          "摘要未交代评测覆盖面与统计显著性，泛化性风险仍在"
+        ],
+        "dimensions": {
+          "novelty": 3,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "超越压缩比：用于分类 LLM 服务的高吞吐量 KV 压缩",
+      "summary_zh": "KV 缓存压缩减少了分解的大型语言模型服务的通信量，但其实际效益不仅取决于压缩率和模型质量，还取决于压缩管道的执行效率。随着现代服务系统采用高带宽互连，这一要求变得越来越重要，其中低效的压缩可能会抵消大部分节省的通信时间。本文介绍了 \\system，一个构建在 \\kvserve 之上的高吞吐量 KV 缓存压缩数据路径。 \\system 以两种互补的方式改进压缩执行。首先，它将分布变换和低位量化阶段融合到 KV 感知的 \\tilelang 内核中，消除了中间张量物化和冗余内存访问。其次，它用基于 \\lc 的开放、可扩展、可搜索的后端取代了原来的无损压缩后端，从而实现了高性能的压缩运算符管道。融合内核实现了高达 5.9\\times$ 的加速，而新的无损后端将压缩吞吐量从低于 90~GB/s 提高到超过 500~GB/s。在评估的工作负载中，\\system 将作业完成时间减少了高达 $2.04\\times$。端到端评估表明，这些优化允许 KV 压缩在现代高带宽网络下保留有意义的通信优势。"
+    },
+    {
+      "id": "2611.04164",
+      "title": "What Remains in Sight? Autoregressive Video Decoding as Representation-Guided Context Rewriting",
+      "authors": [
+        "Lixuan He",
+        "Jihyeon Je",
+        "Yang You",
+        "Leonidas Guibas"
+      ],
+      "summary": "Long-horizon video generation is increasingly moving toward autoregressive rollout, where each newly generated segment becomes part of the evidence used for future prediction. Recent causal decoders, long-context training, and KV-cache mechanisms have extended feasible duration, but most inference pipelines still decide the visible past implicitly through recent windows, compressed caches, or external memory. This raises a direct question: \\textbf{can the choice of which past frames or segments to show to the decoder be treated as an explicit test-time decision?} We answer this question with \\textsc{ReCR}, a training-free method that formulates autoregressive video decoding as representation-guided context rewriting. At each step, \\textsc{ReCR} builds a selected visible context from the generated history by using internal decoder representations to favor context units that match the global rollout state, avoid redundancy with the recent continuation, preserve temporal boundary coverage, and widen the range of spatial layouts in view. The selected units are then mapped onto a compact causal axis before decoding the next block. Across long-horizon text-to-video benchmarks, \\textsc{ReCR} consistently improves multiple autoregressive backbones under matched visible-token budgets. Empirical analyses such as representation-space diagnostics and transition-count prompt switching further show that improving what remains visible is an effective path toward more stable long-video decoding.",
+      "published": "2026-11-03T01:54:23Z",
+      "updated": "2026-11-03T01:54:23Z",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04164v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04164v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "KV Cache",
+        "Long Context"
+      ],
+      "primary_topic": "KV Cache",
+      "age_days": 1,
+      "quality": {
+        "score": 74,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "思路新颖且实用，但证据链仍需更扎实",
+        "pros": [
+          "将可见历史选择显式化为测试时决策，问题定义清晰且有价值",
+          "训练无关并可适配多种自回归骨干，在等token预算下提升具工程吸引力"
+        ],
+        "cons": [
+          "摘要未交代计算开销、选择稳定性与失败案例，因果归因和泛化边界仍存不确定性"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "眼前还剩下什么？自回归视频解码作为表示引导的上下文重写",
+      "summary_zh": "长视野视频生成越来越倾向于自回归部署，其中每个新生成的片段都成为用于未来预测的证据的一部分。最近的因果解码器、长上下文训练和 KV 缓存机制延长了可行的持续时间，但大多数推理管道仍然通过最近的窗口、压缩缓存或外部存储器隐式地决定可见的过去。这就提出了一个直接的问题：\\textbf{选择向解码器显示哪些过去的帧或片段可以被视为显式的测试时间决策吗？}我们用 \\textsc{ReCR} 回答这个问题，这是一种免训练的方法，它将自回归视频解码制定为表示引导的上下文重写。在每一步中，\\textsc{ReCR} 通过使用内部解码器表示来从生成的历史中构建选定的可见上下文，以支持与全局推出状态匹配的上下文单元，避免与最近的延续出现冗余，保留时间边界覆盖范围，并扩大视图中的空间布局范围。然后，在解码下一个块之前，将选定的单元映射到紧凑的因果轴上。在长期文本到视频基准测试中， \\textsc{ReCR} 在匹配的可见标记预算下持续改进多个自回归骨干网。表示空间诊断和转换计数提示切换等实证分析进一步表明，改善可见性是实现更稳定的长视频解码的有效途径。"
+    },
+    {
+      "id": "2611.04144",
+      "title": "HyPAIC: Personal AI Computer with High Bandwidth Flash for High Performance Trillion-Parameter LLM Inference",
+      "authors": [
+        "Minho Ha",
+        "Myunghyun Rhee",
+        "Euiseok Kim",
+        "Hoshik Kim"
+      ],
+      "summary": "LLMs have rapidly expanded from simple chatbots to agentic AI, where models directly use tools to solve complex problems. To improve problem solving, most frontier LLMs adopt an MoE architecture, pushing model sizes into the trillion-parameter regime. While cloud services have dominated large-scale LLM inference, cost and security concerns drive demand for on-premises deployment. Thus, GPU manufacturers have introduced personal AI computers (PAICs). However, existing PAICs with LPDDR-based unified main memory suffer from severe capacity limitations, restricting hostable LLM size on a single device. If most memory holds model weights, little remains for the KV cache, reducing supported context length. In this paper, we propose HyPAIC, a PAIC architecture incorporating HBF to overcome these memory constraints. HyPAIC stores read-only model weights in HBF and mutable runtime data in LPDDR. HBF offers over 10x the capacity of HBM with comparable TB/s-scale bandwidth. HyPAIC addresses HBF's access latency, limited write endurance, and page-level access granularity through prefetching, read-only weight placement, and coarse-grained weight accesses, respectively; power and cooling remain significant implementation challenges. Through simulation-based evaluation, we show that a single HyPAIC improves end-to-end system throughput by up to 1.04x and TDP-normalized throughput by up to 3.59x during 1T-parameter MoE inference versus the aggregate of eight baseline systems without HBF, one HyPAIC thus approaches the raw performance of eight baselines with far superior power efficiency. For small model inference, HyPAIC increases the maximum number of concurrent tasks sustaining at least 50 decode TPS per task by up to 4x, enhancing user experience and productivity. Although HBF specifications are still evolving, this study demonstrates strong architectural synergy between HBF and PAICs.",
+      "published": "2026-11-03T01:36:46Z",
+      "updated": "2026-11-03T01:36:46Z",
+      "categories": [
+        "cs.AR"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04144v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04144v1",
+      "comment": "14 pages, 16 figures, 4 tables",
+      "journal_ref": "",
+      "topics": [
+        "KV Cache",
+        "Sparsity / MoE",
+        "Long Context",
+        "Efficient Inference"
+      ],
+      "primary_topic": "KV Cache",
+      "age_days": 1,
+      "quality": {
+        "score": 66,
+        "tier": "C",
+        "label": "中等",
+        "stars": 3,
+        "verdict": "选题重要但证据链偏弱，结论需谨慎解读。",
+        "pros": [
+          "聚焦PAIC内存瓶颈与超大MoE本地部署痛点，问题价值高",
+          "提出HBF放权重、LPDDR放可变数据的分层思路，架构直观且有工程可行性"
+        ],
+        "cons": [
+          "核心结果主要基于仿真，缺少原型或真实系统实测支撑",
+          "“单机接近八机性能”与仅1.04x吞吐提升表述张力较大，基线与指标口径需更严谨"
+        ],
+        "dimensions": {
+          "novelty": 3,
+          "significance": 4,
+          "rigor": 2,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "HyPAIC：具有高带宽闪存的个人人工智能计算机，用于高性能万亿参数 LLM 推理",
+      "summary_zh": "法学硕士已从简单的聊天机器人迅速扩展到代理人工智能，其中模型直接使用工具来解决复杂问题。为了提高问题解决能力，大多数前沿法学硕士都采用 MoE 架构，将模型规模推向万亿参数水平。虽然云服务在大规模 LLM 推理中占据主导地位，但成本和安全问题推动了对本地部署的需求。因此，GPU制造商推出了个人人工智能计算机（PAIC）。然而，现有的具有基于 LPDDR 的统一主存储器的 PAIC 受到严重的容量限制，限制了单个设备上可托管的 LLM 大小。如果大多数内存保存模型权重，那么 KV 缓存就只剩下很少的内存，从而减少支持的上下文长度。在本文中，我们提出了 HyPAIC，这是一种结合 HBF 的 PAIC 架构，以克服这些内存限制。 HyPAIC 将只读模型权重存储在 HBF 中，将可变运行时数据存储在 LPDDR 中。 HBF 提供的容量是 HBM 的 10 倍以上，且带宽具有相当的 TB/s 规模。 HyPAIC分别通过预取、只读权重放置和粗粒度权重访问来解决HBF的访问延迟、有限的写入耐久性和页级访问粒度；电力和冷却仍然是重大的实施挑战。通过基于仿真的评估，我们表明，与没有 HBF 的八个基线系统的总和相比，单个 HyPAIC 在 1T 参数 MoE 推理期间将端到端系统吞吐量提高了高达 1.04 倍，TDP 归一化吞吐量提高了高达 3.59 倍，因此，一个 HyPAIC 可以以远远优越的功效接近八个基线的原始性能。对于小型模型推理，HyPAIC 将每个任务维持至少 50 个解码 TPS 的最大并发任务数量提高了 4 倍，从而增强了用户体验和生产力。尽管 HBF 规范仍在不断发展，但本研究证明了 HBF 和 PAIC 之间强大的架构协同作用。"
+    },
+    {
+      "id": "2611.04137",
+      "title": "LoopKV: Loop-Aware KV Cache Compression for Serving Looped Transformers",
+      "authors": [
+        "Tianle Zhou",
+        "Yang Zhang",
+        "Tianyu Wu",
+        "Zhuohan Wang",
+        "William Nixon",
+        "Juncheng Yang"
+      ],
+      "summary": "Looped transformers apply a shared block several times per token to improve accuracy without adding parameters. For models such as Ouro that keep a separate key-value (KV) cache per loop, cache memory limits the batch size that amortizes repeated weight reads. Uniform-bit quantization and fixed rules per loop do not allocate precision according to each layer's sensitivity in each loop. Measurements on Ouro show that quantization sensitivity varies across (loop, layer) cells, and the sum of individual cell damages approximates the overall output damage. Sharing damage also varies by cell, with later loops generally tolerating sharing better. Skipping low-attention values to save reads produces errors that compound across loops. LoopKV uses a one-time offline profile to choose 4-bit storage, 2-bit storage or reuse of the final loop's KV for each cell. The planner minimizes reads under budgets for predicted damage and storage. During decoding, each loop reads the high 2 bits of each 4-bit value and fetches the low bits only where its own attention weights require 4-bit precision. A single fused kernel in vLLM executes the plan. Serving Ouro-1.4B on one RTX PRO 6000, the memory-optimized LoopKV-M plan stores 35% less KV than uniform 4-bit quantization (KIVI-4) on the same fused kernel and CUDA graph. It sustains 1.7-2.2x KIVI-4's goodput under a latency service-level objective with a 16K-token maximum length. None of its averages on six public benchmarks falls significantly below BF16's.",
+      "published": "2026-11-03T01:28:57Z",
+      "updated": "2026-11-03T01:28:57Z",
+      "categories": [
+        "cs.LG",
+        "cs.CL",
+        "cs.DC"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04137v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04137v1",
+      "comment": "28 pages, 15 figures",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "KV Cache",
+        "Quantization",
+        "Efficient Inference"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 1,
+      "quality": {
+        "score": 82,
+        "tier": "A",
+        "label": "高质量",
+        "stars": 4,
+        "verdict": "问题切中痛点，方案实用且效果有说服力。",
+        "pros": [
+          "针对(loop, layer)异质敏感度做细粒度规划，较固定量化更有新意",
+          "在统一内核与同图设置下显著提升goodput并降低KV占用"
+        ],
+        "cons": [
+          "主要验证集中于Ouro-1.4B与单卡场景，跨模型与多GPU泛化仍需更强证据"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 4,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "LoopKV：用于服务循环变压器的循环感知 KV 缓存压缩",
+      "summary_zh": "循环变压器对每个令牌多次应用共享块，以提高准确性，而无需添加参数。对于像 Ouro 这样每个循环保留单独的键值 (KV) 缓存的模型，缓存内存限制了分摊重复权重读取的批量大小。统一位量化和每个循环的固定规则不会根据每个循环中每个层的敏感度来分配精度。 Ouro 上的测量结果表明，量化灵敏度在（循环、层）细胞之间存在差异，并且单个细胞损伤的总和近似于总体输出损伤。共享损坏也因单元而异，后面的循环通常可以更好地容忍共享。跳过低注意力值来保存读取会产生跨循环复合的错误。 LoopKV 使用一次性离线配置文件来选择 4 位存储、2 位存储或重复使用每个单元的最终循环的 KV。规划器将预测损坏和存储的读取量降到最低。在解码期间，每个循环读取每个 4 位值的高 2 位，并仅在其自身的注意力权重需要 4 位精度的情况下获取低位。 vLLM 中的单个融合内核执行该计划。在一台 RTX PRO 6000 上为 Ouro-1.4B 提供服务，内存优化的 LoopKV-M 计划在相同的融合内核和 CUDA 图上存储的 KV 比统一 4 位量化 (KIVI-4) 少 35%。在最大长度为 16K 令牌的延迟服务级别目标下，它可维持 KIVI-4 的 1.7-2.2 倍的吞吐量。六个公共基准的平均值均未显着低于 BF16。"
+    },
+    {
+      "id": "2611.04055",
+      "title": "HybridSpec: Throughput-Aware Speculative Decoding for Hybrid GDN-MoE Models",
+      "authors": [
+        "Haiyu Wang",
+        "Sai Qian Zhang",
+        "Zechun Liu",
+        "Steven Li"
+      ],
+      "summary": "In speculative decoding, parallel drafters such as DFlash make drafting cheap, so target verification dominates each round. A central choice is the verification length, the number of tokens that the target processes in each round. Verifying more draft tokens can accept more of them, but work after the first rejection is wasted. For hybrid target models that combine Gated DeltaNet (GDN) and mixture-of-experts (MoE) layers, verification time grows much faster with this length than for dense models. In a single-request profile of Qwen3.6-35B-A3B with DFlash, it grew by 71% from length 4 to 16, almost entirely in GDN and MoE layers, compared with 4%-6% for a dense Qwen3-4B target. Each GDN layer must update a recurrent state at every token and recover it at the end of the accepted prefix. The MoE cost depends on the experts that the tokens activate, which are known only once verification runs. We present HybridSpec, which selects the verification length on the GPU from draft-side acceptance estimates and measured target latency. Verification then runs this length plus one extra token up to the first MoE router, before any expert runs. There, a lightweight routing correction uses the observed expert assignments to decide whether to keep that token. The rest of verification runs only on the selected tokens. Block-parallel GDN kernels avoid storing a state after every token and reconstruct the accepted state of every GDN layer in one launch. In isolated benchmarks at verification lengths 4 to 16 with every draft token accepted, these kernels, including accepted-state reconstruction, are $1.54\\times$-$4.04\\times$ faster than the default kernels. With three GDN-MoE target models in single-request greedy decoding, HybridSpec is $1.75\\times$-$1.88\\times$ faster than autoregressive decoding and $1.30\\times$-$1.33\\times$ faster than DFlash.",
+      "published": "2026-11-02T22:58:00Z",
+      "updated": "2026-11-02T22:58:00Z",
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04055v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04055v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "Speculative Decoding",
+        "Sparsity / MoE",
+        "Efficient Inference"
+      ],
+      "primary_topic": "Speculative Decoding",
+      "age_days": 1,
+      "quality": {
+        "score": 78,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "问题抓得准且工程价值高，但证据仍偏窄。",
+        "pros": [
+          "针对GDN-MoE验证瓶颈提出长度自适应与路由纠偏，机制设计有新意",
+          "给出内核级优化并在多模型上相对DFlash与AR取得稳定加速"
+        ],
+        "cons": [
+          "实验主要为单请求贪心场景，缺少多并发、长上下文与采样解码下的泛化与端到端成本分析",
+          "与更强基线和消融不够充分，难以完全归因各模块贡献"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "HybridSpec：混合 GDN-MoE 模型的吞吐量感知推测解码",
+      "summary_zh": "在推测性解码中，DFlash 等并行起草器使起草成本降低，因此目标验证在每一轮中占据主导地位。一个核心选​​择是验证长度，即目标在每轮中处理的令牌数量。验证更多的草稿令牌可以接受更多的草稿令牌，但第一次拒绝后的工作就被浪费了。对于结合了门控 DeltaNet (GDN) 和混合专家 (MoE) 层的混合目标模型，在这个长度下验证时间的增长速度比密集模型快得多。在带有 DFlash 的 Qwen3.6-35B-A3B 的单请求配置文件中，它从长度 4 增长到 16，几乎完全在 GDN 和 MoE 层中增长了 71%，而密集的 Qwen3-4B 目标增长了 4%-6%。每个 GDN 层必须更新每个令牌的循环状态，并在接受的前缀末尾恢复它。 MoE 成本取决于代币激活的专家，只有在验证运行后才知道。我们提出了 HybridSpec，它根据草稿侧验收估计和测量的目标延迟来选择 GPU 上的验证长度。然后，在任何专家运行之前，验证会运行此长度加上一个额外的令牌，直到第一个 MoE 路由器。在那里，轻量级路由修正使用观察到的专家分配来决定是否保留该令牌。其余验证仅在选定的令牌上运行。块并行 GDN 内核避免在每个令牌之后存储状态，并在一次启动中重建每个 GDN 层的接受状态。在验证长度为 4 到 16 的独立基准测试中，每个草案令牌都被接受，这些内核（包括接受状态重建）比默认内核快 $1.54\\times$-$4.04\\times$。在单请求贪婪解码中使用三个 GDN-MoE 目标模型，HybridSpec 比自回归解码快 $1.75\\times$-$1.88\\times$，比 DFlash 快 $1.30\\times$-$1.33\\times$。"
+    },
+    {
+      "id": "2611.04042",
+      "title": "Testing Processor Contracts in Speculative Decoding Engines",
+      "authors": [
+        "Tianyu Ding",
+        "Yaocheng Tong",
+        "Muzhi Yang",
+        "Lei Yang",
+        "Fei Jiang"
+      ],
+      "summary": "Speculative sampling can accelerate decoding without changing the target distribution. Its standard guarantee assumes that logits processors, which enforce constraints or modify token scores, receive the appropriate token prefix and state at each verification position. We formalize this processor-prefix contract and present BADC (branch-aware differential conformance testing). BADC combines enumerated references on tiny random models, checks of processor inputs and state, and simultaneous confidence bounds on output-event probabilities. Preregistered, source-informed experiments on selected Transformers and llama-cpp-python releases confirm two causes: processors read unverified drafts or advance state without rollback. For one pilot-selected prompt on a trained checkpoint, fresh samples give a 60.26-percentage-point lower bound on the difference in the probability of a predefined first-token event between ordinary and prompt-lookup decoding, with nominal simultaneous 95% coverage under within-arm i.i.d. sampling. Controlled comparisons establish no cause-recovery advantage of directed selection over random selection, while permutation testing detects each tested family at least as often as BADC. These findings connect processor-interface failures to observable decoding differences without establishing diagnostic superiority or workload prevalence.",
+      "published": "2026-11-02T22:36:35Z",
+      "updated": "2026-11-02T22:36:35Z",
+      "categories": [
+        "cs.SE",
+        "cs.LG"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04042v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04042v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "Speculative Decoding"
+      ],
+      "primary_topic": "Speculative Decoding",
+      "age_days": 1,
+      "quality": {
+        "score": 74,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "问题切中要害，证据扎实但外推价值有限。",
+        "pros": [
+          "提出处理器-前缀契约并给出分支感知一致性测试框架，问题定义清晰",
+          "采用预注册与同时置信界等统计设计，能将接口失配与可观测分布差异建立联系"
+        ],
+        "cons": [
+          "实验覆盖面与工作负载代表性不足，尚不能支持普遍影响规模判断",
+          "作者已承认在诊断优越性上无优势，方法相对现有检验的增量价值受限"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 3,
+          "rigor": 4,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "在推测解码引擎中测试处理器合约",
+      "summary_zh": "推测采样可以在不改变目标分布的情况下加速解码。其标准保证假设强制约束或修改令牌分数的 logits 处理器在每个验证位置接收适当的令牌前缀和状态。我们正式确定了这个处理器前缀合同并提出了 BADC（分支感知差分一致性测试）。 BADC 结合了微小随机模型的枚举参考、处理器输入和状态的检查以及输出事件概率的同时置信界限。对选定的 Transformer 和 llama-cpp-python 版本进行的预注册、来源知情的实验证实了两个原因：处理器读取未经验证的草稿或提前状态而不回滚。对于训练检查点上的一个飞行员选择的提示，新样本给出了普通解码和提示查找解码之间预定义第一个令牌事件的概率差异的 60.26 个百分点的下限，在臂内 i.i.d 下标称同时覆盖率为 95%。采样。受控比较表明定向选择相对于随机选择没有原因恢复优势，而排列测试检测每个测试家族的频率至少与 BADC 一样。这些发现将处理器接口故障与可观察到的解码差异联系起来，但没有建立诊断优势或工作负载普遍性。"
+    },
+    {
+      "id": "2611.04032",
+      "title": "ROCm InferaSim: Cut LLM Serving Trial Costs and Deploy the Best Configuration",
+      "authors": [
+        "Anshu Raina",
+        "Yao Fu",
+        "Zhang Jiejing",
+        "Peyman Razaghi",
+        "Shiksha Patel",
+        "Ravi Gupta",
+        "Deval Shah",
+        "Adeem Jassani",
+        "Subhajit Dutta Chowdhury",
+        "Lorri Rao",
+        "Kailash Gogineni",
+        "Zhenyu Gu",
+        "Onil Gunawardana",
+        "Emad Barsoum"
+      ],
+      "summary": "Serving an LLM efficiently depends on the engine, how the model is split across GPUs, precision, scheduler settings, speculative decoding, KV-cache management, and prefill-decode disaggregation. The best configuration depends on the model, hardware, workload, and objective. Operators usually find it by trial and error. Exhaustively measuring the candidates in our study would take about 25,000 GPU-hours. ROCm InferaSim predicts serving performance from a few short measurements. Choices such as batch size, prompt length, and GPU count change the amount of work per GPU without changing the kernels. ROCm InferaSim benchmarks each distinct set of kernels once, on at most one node. We call this measurement an anchor. Analytical laws carry that anchor to other deployments that run the same kernels. For multi-node deployments, ROCm InferaSim reduces the configuration to a single-node equivalent, measures it, and scales the result analytically. A simulator replays multi-turn traffic, and a tuning agent searches configurations using the predictions. On AMD Instinct MI355X GPUs with vLLM, SGLang, and ATOM, 11 anchors took 9.1 GPU-hours, against 204 GPU-hours to measure the 226 fixed-length configurations they cover. On 172 configurations, time per output token has 8.1% median error. On a multi-turn coding workload, throughput is within 8%. For 159 disaggregated deployments, none used as an anchor, throughput is within 5.5%. A five-candidate short list contains a deployment within 12% of the best feasible pairing of model and latency target.",
+      "published": "2026-11-02T22:23:40Z",
+      "updated": "2026-11-02T22:23:40Z",
+      "categories": [
+        "cs.AI",
+        "cs.DC"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.04032v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.04032v1",
+      "comment": "37 pages, 11 figures",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "KV Cache",
+        "Speculative Decoding",
+        "Efficient Inference"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 1,
+      "quality": {
+        "score": 78,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "问题重要、方法实用，但创新深度与验证边界一般。",
+        "pros": [
+          "直击LLM部署调参成本痛点，GPU小时节省量级有说服力",
+          "提出anchor+解析外推+流量回放调优的完整闭环，工程可落地性强"
+        ],
+        "cons": [
+          "核心思想更偏系统建模与缩放工程整合，算法新颖性与跨平台泛化证据仍偏有限"
+        ],
+        "dimensions": {
+          "novelty": 3,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "ROCm InferaSim：降低 LLM 服务试用成本并部署最佳配置",
+      "summary_zh": "有效地为 LLM 提供服务取决于引擎、模型如何在 GPU 之间分割、精度、调度程序设置、推测解码、KV 缓存管理和预填充解码分解。最佳配置取决于型号、硬件、工作负载和目标。操作员通常通过反复试验来找到它。彻底衡量我们研究中的候选者大约需要 25,000 个 GPU 小时。 ROCm InferaSim 通过一些简短的测量来预测服务性能。批处理大小、提示长度和 GPU 计数等选择会更改每个 GPU 的工作量，而无需更改内核。 ROCm InferaSim 最多在一个节点上对每组不同的内核进行一次基准测试。我们称这种测量为锚点。分析定律将该锚点应用于运行相同内核的其他部署。对于多节点部署，ROCm InferaSim 将配置减少为单节点等效配置，对其进行测量，并通过分析扩展结果。模拟器重播多轮流量，调整代理使用预测来搜索配置。在具有 vLLM、SGLang 和 ATOM 的 AMD Instinct MI355X GPU 上，11 个锚点需要 9.1 个 GPU 小时，而测量它们所覆盖的 226 个固定长度配置需要 204 个 GPU 小时。在 172 个配置中，每个输出令牌的时间中值误差为 8.1%。在多轮编码工作负载上，吞吐量在 8% 以内。对于 159 个分类部署（没有一个用作锚点），吞吐量在 5.5% 以内。五个候选者的短名单包含与模型和延迟目标的最佳可行配对相差 12% 以内的部署。"
+    },
+    {
+      "id": "2611.03998",
+      "title": "Dory1.0-4B: A Looped Normalized-GPT",
+      "authors": [
+        "Maxim Fishman",
+        "Simeng Sun",
+        "Shantanu Acharya",
+        "Faisal Ladhak",
+        "Brian Chmiel",
+        "Santiago Akle Serano",
+        "Ron Banner",
+        "Boris Ginsburg",
+        "Krishna C. Puvvada"
+      ],
+      "summary": "We introduce Dory1.0-4B, a 4-billion-parameter looped (latent-recurrent) language model with elastic depth: a single checkpoint serves different inference compute budgets. Dory1.0-4B is built on a normalized Transformer (nGPT) backbone with interleaved sliding-window and full-attention layers, organized into an input block, a shared recurrent block, and an output block. At inference, the recurrent block can be applied a variable number of times. We pre-trained Dory1.0-4B on 6 trillion tokens. The first 4.5 trillion tokens were trained in NVFP4, and additional pre-training then extended the context length to 256K tokens. Next, we post-trained the model using Supervised Fine-Tuning (SFT) and Reinforcement Learning with Verifiable Rewards (RLVR), with a difficulty-aware loop curriculum that routes harder prompts to deeper loops. Increasing the loop count improves accuracy, with the largest gains on coding, agentic, and long-context benchmarks. With two or more loops, Dory1.0-4B outperforms larger models such as Qwen3.5-9B, Gemma 4 12B, and Gemma 4 26B-A4B on average across 12 benchmarks. Looping also makes Dory1.0-4B more token-efficient on agentic benchmarks: with four loops, it generates 1.3-2.5x fewer tokens than with one loop, as the extra computation is spent in latent space rather than on longer outputs. To reduce memory during looping, Dory1.0-4B caches keys and values only from the last loop, keeping its KV-cache footprint equal to that of a non-looped model at any loop count while retaining most of the accuracy gains. We open-source the BF16, MXFP8, NVFP4, and GGUF quantized checkpoints.",
+      "published": "2026-11-02T21:38:49Z",
+      "updated": "2026-11-02T21:38:49Z",
+      "categories": [
+        "cs.CL"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.03998v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.03998v1",
+      "comment": "",
+      "journal_ref": "",
+      "topics": [
+        "KV Cache",
+        "Quantization",
+        "Long Context",
+        "Training Efficiency"
+      ],
+      "primary_topic": "KV Cache",
+      "age_days": 1,
+      "quality": {
+        "score": 74,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "方向重要且有新意，但实证严谨性仍待加强",
+        "pros": [
+          "弹性深度的循环架构可按预算伸缩推理计算，工程价值高",
+          "同时强调精度提升、长上下文与KV缓存开销控制，系统视角较完整"
+        ],
+        "cons": [
+          "摘要缺少关键实验细节与公平性信息（训练/推理成本、统计显著性、对照设置），对“优于更大模型”结论支撑不足"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "Dory1.0-4B：循环标准化 GPT",
+      "summary_zh": "我们引入了 Dory1.0-4B，这是一个具有弹性深度的 40 亿参数循环（潜在循环）语言模型：单个检查点服务于不同的推理计算预算。 Dory1.0-4B 构建在归一化 Transformer (nGPT) 主干上，具有交错的滑动窗口和全注意力层，组织为输入块、共享循环块和输出块。据推断，循环块可以应用可变次数。我们用 6 万亿个代币对 Dory1.0-4B 进行了预训练。前 4.5 万亿个令牌在 NVFP4 中进行训练，然后额外的预训练将上下文长度扩展到 256K 个令牌。接下来，我们使用监督微调（SFT）和具有可验证奖励的强化学习（RLVR）对模型进行后训练，并使用难度感知循环课程将较难的提示路由到更深的循环。增加循环计数可以提高准确性，在编码、代理和长上下文基准测试中获得最大收益。通过两个或更多循环，Dory1.0-4B 在 12 个基准测试中的平均性能优于 Qwen3.5-9B、Gemma 4 12B 和 Gemma 4 26B-A4B 等较大模型。循环还使 Dory1.0-4B 在代理基准上更具令牌效率：使用四个循环，它生成的令牌比使用一个循环少 1.3-2.5 倍，因为额外的计算花费在潜在空间而不是较长的输出上。为了减少循环期间的内存，Dory1.0-4B 仅缓存最后一个循环的键和值，在任何循环计数下使其 KV 缓存占用量与非循环模型的占用量相同，同时保留大部分精度增益。我们开源了 BF16、MXFP8、NVFP4 和 GGUF 量化检查点。"
+    },
+    {
+      "id": "2611.03992",
+      "title": "FlagRot: Selective Rotation for Low-Bit KV Caches",
+      "authors": [
+        "Kunming Shao",
+        "Xijie Huang",
+        "Jierun Chen",
+        "Jiaqi Shao",
+        "Yanli Wang",
+        "Jiangnan Yu",
+        "Qiwei Li",
+        "Wei Zhang",
+        "Kwang-Ting Cheng",
+        "Chi Ying Tsui"
+      ],
+      "summary": "Long-context inference is bound by the KV cache, which 2-bit codes could shrink about sixfold if their error stays in check. The usual remedy rotates keys before quantizing, assuming rotation always helps. However, we observe that it does not: rotation flattens a spiky piece of a key but can give a flat one a new peak, and both coexist within one key. We therefore propose FlagRot, which stores each 32-channel piece rotated or as is, whichever has the smaller calibrated attention error, and rotates the query instead when reading. We further show that how often to decide follows the quantization axis: per-channel caches such as KIVI need one decision per head, at no write cost, while per-token caches decide per key, with the choice stored in existing sign bits. At 2.5 bits per value, FlagRot lowers the twelve-model KL divergence of KIVI from 18.7 to 12.4 x 10^-3, below RotateKV on 9 of 12 models. Served as a vLLM plugin, it raises RULER at 128k tokens by +2.9 points and the LongBench v1 mean by +0.4 to +1.9 points on the three of four models where 2-bit KIVI loses accuracy. It also lowers the error of 4-bit integer and FP4 caches.",
+      "published": "2026-11-02T21:31:33Z",
+      "updated": "2026-11-02T21:31:33Z",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.03992v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.03992v1",
+      "comment": "26 pages, 5 figures. Code: https://github.com/KunmingSHAO/FlagRot_releaser",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "KV Cache",
+        "Quantization",
+        "Long Context"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 1,
+      "quality": {
+        "score": 78,
+        "tier": "B",
+        "label": "较高",
+        "stars": 4,
+        "verdict": "问题切中要害，思路新颖实用，但证据仍需更全面。",
+        "pros": [
+          "抓住“旋转并非总收益”的关键反例，提出选择性旋转机制有新意",
+          "方法与量化轴对齐（per-head/per-key）并考虑工程落地，vLLM插件验证增强实用价值"
+        ],
+        "cons": [
+          "摘要仅给出部分基线与模型覆盖，缺少开销、稳定性与极端场景的系统性消融",
+          "提升幅度在部分基准上偏中等，泛化到更多架构与更长上下文的说服力仍有限"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "FlagRot：低位 KV 缓存的选择性轮换",
+      "summary_zh": "长上下文推理受到 KV 缓存的约束，如果错误得到控制，2 位代码可以缩小约六倍。通常的补救措施是在量化之前旋转关键点，假设旋转总是有帮助的。然而，我们观察到事实并非如此：旋转使键的尖峰部分变平，但可以给平的部分一个新的峰值，并且两者共存于一个键内。因此，我们提出 FlagRot，它存储每个旋转的 32 通道片段或按原样存储，以校准注意误差较小者为准，并在读取时旋转查询。我们进一步表明，决定的频率遵循量化轴：每通道缓存（例如 KIVI）需要每个头一个决定，而无需写入成本，而每令牌缓存决定每个键，并将选择存储在现有符号位中。在每个值 2.5 位的情况下，FlagRot 将 KIVI 的 12 个模型 KL 散度从 18.7 降低到 12.4 x 10^-3，在 12 个模型中的 9 个上低于 RotateKV。作为 vLLM 插件，它在 128k 代币的 RULER 上提高了 +2.9 点，在 2 位 KIVI 失去准确性的四个模型中的三个模型上，LongBench v1 平均值提高了 +0.4 到 +1.9 点。它还降低了 4 位整数和 FP4 缓存的错误。"
+    },
     {
       "id": "2611.03517",
       "title": "Ask, Don't Equip: Question-Driven Coding Agents for Deep Kernel Optimization",
@@ -65,7 +831,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 0,
+      "age_days": 1,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -119,7 +885,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 0,
+      "age_days": 1,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -145,6 +911,59 @@
       },
       "title_zh": "LLM 推理能源成本的简单法则",
       "summary_zh": "生成式人工智能按代币计费，但代币并不同样昂贵。每个令牌进入 KV 缓存并提高后续令牌的成本，因此能量沿着令牌看起来相同的序列非线性增长。没有分析模型说明代币的成本，最准确的 SOTA 模型是一个拟合，而不是一个定律：它将架构吸收到拟合系数中，需要每个 LLM 拟合。我们根据架构超参数推导了 LLM 推理的计算和内存访问复杂性的封闭式表达式，涵盖 MHA 和 GQA，并比较了一系列粒度递增的分析模型。由此，我们获得了预测 LLM 能量的简单推理模型 (SIMPLE)，这是一个四参数定律，将预填充与解码分开，并解码为 KV 缓存成本和下一个令牌计算。在 NVIDIA H100 GPU 上对来自 6 个系列的 13 个密集 LLM 进行跟踪后，它获得了 R2 = 0.969 和 11.97% MAPE，比 SOTA 低 3.1-3.5 倍，无需进行每个 LLM 校准。 SIMPLE 定律解释并预测：预填充能量随隐藏维度呈二次方增长，因此较大的 LLM 受到长输入的影响最大；与标准 MHA 相比，更积极的 GQA KV 分组可将每个代币的能量降低多达 3 倍。增加推理代币预算使输出长度超出分析得出的能量最小值，推动超线性能量增长；虽然准确性随着预算的增加而增加，但能量的增长速度更快，因此每焦耳智能在中间预算时达到峰值，并在 4.0 倍推理预算范围内下降最多 3.14 倍。由于预填充和 KV 缓存项随输入长度的增长，代理服务相对于非代理服务将每个请求的能量提高了 13.0 倍；虽然前缀缓存消除了大部分预填充成本 (-93%)，但 KV 缓存项不受影响，因此即使是缓存的代理请求，成本也会增加 4.8 倍。"
+    },
+    {
+      "id": "2611.03768",
+      "title": "Multi-layer Indexer: Overlapping Selection and Attention in DeepSeek Sparse Attention",
+      "authors": [
+        "Serdarcan Dilbaz",
+        "Arjun Krishna",
+        "Kiran Kamble",
+        "Daniel M. Bikel"
+      ],
+      "summary": "Sparse attention cuts the cost of long-context inference by making the attention matrix sparse: each query attends only a subset of the sequence, chosen by a fixed pattern or, in recent production LLMs, learned per query. In DeepSeek Sparse Attention (DSA), the attention of DeepSeek-V3.2 and the GLM-5 family, every layer is preceded by a lightning indexer that scores the whole cache and keeps the k=2048 highest-scoring tokens for the layer to attend. At long context this indexer scan, not the sparse attention it feeds, is where the decode time goes. But adjacent layers select nearly the same tokens, so a layer can attend the selection of the previous indexer layer instead of its own. This removes the dependency: each indexer then runs concurrently with the attention of its layer. The resulting Multi-layer Indexer (MLI) needs no retraining and no new weights. Its default realization changes no kernel, running inside SGLang's production decode graph; an optional fused decode kernel accelerates it further on DeepSeek-V3.2. MLI composes with IndexCache (the cross-layer reuse GLM-5.2 ships as IndexShare): IndexCache drops the indexer from some layers, and MLI hides the scan on the rest. We serve DeepSeek-V3.2 and GLM-5 under IndexCache's protocol at retentions 1/2 to 1/32 (the fraction of layers that keep an indexer) and contexts 10K to 195K. At equal retention the composition decodes faster than IndexCache: up to 14.5% faster on DeepSeek-V3.2 and 9.8% on GLM-5 at 1/2, and 7.9% and 5.1% at 1/4, largest where IndexCache keeps the most indexers and growing with context. At retention 1/r it is faster still than IndexCache at 1/(2r) while keeping twice the fresh selections: at 128K it reaches 1.32x the unmodified model's decode throughput at 1/4, above IndexCache's 1.28x at 1/8. Its LongBench, RULER and LongBench v2 accuracy stays within a few percentage points of IndexCache's.",
+      "published": "2026-11-02T15:46:01Z",
+      "updated": "2026-11-02T15:46:01Z",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "abs_url": "https://arxiv.org/abs/2611.03768v1",
+      "pdf_url": "https://arxiv.org/pdf/2611.03768v1",
+      "comment": "20 pages (8 pages main text), 4 figures, 11 tables. Accepted to the Long-Context Foundation Models (LCFM) Workshop at NeurIPS 2026, Atlanta, December 12, 2026. Code: https://github.com/ArjunKrishnak/dsa-multi-layer-indexer",
+      "journal_ref": "",
+      "topics": [
+        "LLM Serving",
+        "Sparsity / MoE",
+        "Long Context",
+        "Efficient Inference"
+      ],
+      "primary_topic": "LLM Serving",
+      "age_days": 1,
+      "quality": {
+        "score": 82,
+        "tier": "A",
+        "label": "高质量",
+        "stars": 4,
+        "verdict": "工程价值高，但证据链仍偏系统优化层面。",
+        "pros": [
+          "抓住DSA解码瓶颈并用跨层重叠并行化，思路实用且可部署",
+          "无需重训和默认不改内核，且与IndexCache可组合，收益在长上下文明确"
+        ],
+        "cons": [
+          "精度仅称接近且退化边界不清，缺少更细粒度消融与跨模型泛化、尾延迟及稳定性评估"
+        ],
+        "dimensions": {
+          "novelty": 4,
+          "significance": 4,
+          "rigor": 3,
+          "clarity": 4
+        },
+        "source": "llm",
+        "model": "gpt-5.3-codex"
+      },
+      "title_zh": "多层索引器：DeepSeek稀疏注意力中的重叠选择和注意力",
+      "summary_zh": "稀疏注意力通过使注意力矩阵稀疏来降低长上下文推理的成本：每个查询仅关注序列的一个子集，由固定模式选择，或者在最近的生产法学硕士中，每个查询都学习。在 DeepSeek 稀疏注意力 (DSA)、DeepSeek-V3.2 和 GLM-5 系列的注意力中，每一层之前都有一个闪电索引器，该索引器对整个缓存进行评分，并保留 k=2048 个最高得分令牌供该层参与。在长上下文中，解码时间花在索引器扫描上，而不是它所提供的稀疏注意力上。但相邻层选择几乎相同的标记，因此层可以参与前一个索引器层的选择，而不是自己的选择。这消除了依赖性：每个索引器然后与其层的注意力同时运行。由此产生的多层索引器 (MLI) 不需要重新训练，也不需要新的权重。它的默认实现不改变内核，在 SGLang 的生产解码图中运行；可选的融合解码内核可在 DeepSeek-V3.2 上进一步加速。 MLI 与 IndexCache 组合（跨层重用 GLM-5.2 作为 IndexShare 提供）：IndexCache 从某些层删除索引器，MLI 隐藏其余层的扫描。我们在 IndexCache 协议下提供 DeepSeek-V3.2 和 GLM-5，保留量为 1/2 到 1/32（保留索引器的层的分数），上下文为 10K 到 195K。在保留相同的情况下，该组合的解码速度比 IndexCache 更快：在 1/2 时，DeepSeek-V3.2 上快了 14.5%，在 GLM-5 上快了 9.8%，在 1/4 时分别快了 7.9% 和 5.1%，其中 IndexCache 保留了最多的索引器，并随着上下文而增长。在保留 1/r 时，它仍然比 IndexCache 在 1/(2r) 时更快，同时保留两倍的新鲜选择：在 128K 时，它达到未修改模型解码吞吐量的 1.32 倍（1/4 时），高于 IndexCache 1/8 时的 1.28 倍。它的 LongBench、RULER 和 LongBench v2 准确度与 IndexCache 的准确度相差几个百分点。"
     },
     {
       "id": "2611.03142",
@@ -174,7 +993,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 0,
+      "age_days": 1,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -225,7 +1044,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 0,
+      "age_days": 1,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -289,7 +1108,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 0,
+      "age_days": 1,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -333,23 +1152,23 @@
         "Jingyi Wang",
         "Yitong Yang",
         "Jiyuan Fu",
-        "Qinga He"
+        "Qiang He"
       ],
       "summary": "As streaming generation becomes the dominant serving paradigm for both text-only and multimodal large language models, ensuring safety throughout the generation process has become a critical challenge. We introduce PGuard, a native, streaming, and plug-in guardrail that transforms safety monitoring from an external serving dependency into an integrated capability of the backbone model. PGuard directly leverages the backbone's intermediate representations for token-level safety detection, without altering its original inference pathway or generation behavior. Specifically, dynamic layer gating selectively aggregates residual-stream representations across layers to extract safety-relevant signals during both prefill and autoregressive decoding. To balance detection accuracy and computational efficiency, PGuard supports multiple representation-modeling architectures, including a lightweight stateless variant and sequence-aware variants built on multi-scale causal EMA-attention and GRU-based recurrent modules. Its design also accounts for the execution characteristics of LLM serving frameworks, such as SGLang, optimizing computation and data access to minimize additional runtime and synchronization overhead. As a result, PGuard incurs only 0.82-2.26% end-to-end overhead on the hundred-billion-parameter backbone Qwen3.5-122B-A10B served by SGLang. Extensive evaluations across more than 30 benchmarks spanning text and multimodal safety, jailbreaks, cyber and CBRN risks, multilingual scenarios, and real-world traffic demonstrate state-of-the-art performance among native guardrails. On text queries with Qwen3.5-9B, PGuard achieves an average F1 score of 0.836, approaching dedicated external guardrails, while supporting deployment-time configuration of category-specific thresholds and enforcement actions.",
       "published": "2026-11-02T09:03:39Z",
-      "updated": "2026-11-02T09:03:39Z",
+      "updated": "2026-11-03T06:41:39Z",
       "categories": [
         "cs.CL"
       ],
-      "abs_url": "https://arxiv.org/abs/2611.02791v1",
-      "pdf_url": "https://arxiv.org/pdf/2611.02791v1",
+      "abs_url": "https://arxiv.org/abs/2611.02791v2",
+      "pdf_url": "https://arxiv.org/pdf/2611.02791v2",
       "comment": "",
       "journal_ref": "",
       "topics": [
         "LLM Serving"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 0,
+      "age_days": 1,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -404,7 +1223,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -456,7 +1275,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -511,7 +1330,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -563,7 +1382,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -622,7 +1441,7 @@
         "Long Context"
       ],
       "primary_topic": "Long Context",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -672,7 +1491,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -721,7 +1540,7 @@
         "Long Context"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -774,7 +1593,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -830,7 +1649,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 82,
         "tier": "A",
@@ -882,7 +1701,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -936,7 +1755,7 @@
         "Quantization"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -988,7 +1807,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -1042,7 +1861,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -1113,7 +1932,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 1,
+      "age_days": 2,
       "quality": {
         "score": 68,
         "tier": "B",
@@ -1162,7 +1981,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -1217,7 +2036,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Quantization",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 82,
         "tier": "A",
@@ -1266,7 +2085,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -1324,7 +2143,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Sparsity / MoE",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -1375,7 +2194,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -1425,7 +2244,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "Long Context",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -1462,7 +2281,10 @@
       "published": "2026-10-31T18:25:45Z",
       "updated": "2026-10-31T18:25:45Z",
       "categories": [
-        "cs.LG"
+        "cs.LG",
+        "cs.CL",
+        "cs.DC",
+        "cs.PF"
       ],
       "abs_url": "https://arxiv.org/abs/2611.01174v1",
       "pdf_url": "https://arxiv.org/pdf/2611.01174v1",
@@ -1474,7 +2296,7 @@
         "Quantization"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 66,
         "tier": "C",
@@ -1527,7 +2349,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 71,
         "tier": "B",
@@ -1579,7 +2401,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -1638,7 +2460,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -1684,7 +2506,7 @@
         "Long Context"
       ],
       "primary_topic": "Long Context",
-      "age_days": 2,
+      "age_days": 3,
       "quality": {
         "score": 58,
         "tier": "C",
@@ -1735,7 +2557,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 80,
         "tier": "B",
@@ -1787,7 +2609,7 @@
         "Quantization"
       ],
       "primary_topic": "Quantization",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 66,
         "tier": "C",
@@ -1836,7 +2658,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -1893,7 +2715,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -1947,7 +2769,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -1999,7 +2821,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2055,7 +2877,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -2105,7 +2927,7 @@
         "Long Context"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2161,7 +2983,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 71,
         "tier": "B",
@@ -2210,7 +3032,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -2265,7 +3087,7 @@
         "Quantization"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 56,
         "tier": "C",
@@ -2316,7 +3138,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2371,7 +3193,7 @@
         "Long Context"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -2420,7 +3242,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 3,
+      "age_days": 4,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -2525,7 +3347,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -2578,7 +3400,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Sparsity / MoE",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -2633,7 +3455,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -2685,7 +3507,7 @@
         "KV Cache"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -2736,7 +3558,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 61,
         "tier": "C",
@@ -2792,7 +3614,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -2855,7 +3677,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -2910,7 +3732,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 83,
         "tier": "A",
@@ -2967,7 +3789,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -3022,7 +3844,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -3072,7 +3894,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "Quantization",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -3126,7 +3948,7 @@
         "Quantization"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -3177,7 +3999,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 4,
+      "age_days": 5,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -3228,7 +4050,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -3277,7 +4099,7 @@
         "LLM Serving"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -3328,7 +4150,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -3375,7 +4197,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -3427,7 +4249,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -3476,7 +4298,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 5,
+      "age_days": 6,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -3534,7 +4356,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 82,
         "tier": "A",
@@ -3583,7 +4405,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -3642,7 +4464,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -3694,7 +4516,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -3750,7 +4572,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -4361,7 +5183,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Quantization",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -4414,7 +5236,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -4464,7 +5286,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -4519,7 +5341,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -4567,7 +5389,7 @@
         "LLM Serving"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -4617,7 +5439,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -4668,7 +5490,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -4696,7 +5518,7 @@
     },
     {
       "id": "2610.37466",
-      "title": "Kernel Performance Engineering under Physical Non-Idealities",
+      "title": "Demystifying the Impact of Physical Non-Idealities on Kernel Performance",
       "authors": [
         "Supun Kuruppu",
         "Pranav Dangi",
@@ -4704,14 +5526,14 @@
         "Zhenyu Bai",
         "Tulika Mitra"
       ],
-      "summary": "Physical non-idealities in integrated circuit (IC) design and fabrication are concealed by conventional hardware abstractions, yet they can limit kernel performance and obscure optimization opportunities. Using distributed shared memory (DSMEM) on NVIDIA H100 GPUs as a case study, we show how floorsweeping restricts hardware resources available for clustered execution, potentially offsetting the benefits of reduced data movement enabled by DSMEM. Guided by these insights, we develop a wave-aware clustering strategy that accounts for these resource constraints to improve kernel performance. Evaluations using a global-load-and-broadcast microbenchmark, GEMM, and the Hopper version of FlashAttention 4 demonstrate the performance implications of these constraints, with wave-aware clustering improving FlashAttention 4 throughput by up to 5.30% over its baseline. We further show that, under thermal design power (TDP) limits, reduced data movement enables higher Streaming Multiprocessor (SM) frequencies through Dynamic Voltage and Frequency Scaling (DVFS), explaining otherwise unexpected throughput improvements. Extending this analysis beyond GPUs, we show that power constraints also limit throughput scaling on Tenstorrent's Wormhole accelerator, highlighting the broader importance of accounting for physical non-idealities when analyzing and optimizing kernel performance.",
+      "summary": "Physical non-idealities in integrated circuit (IC) design, fabrication, and operation are concealed by conventional hardware abstractions, causing unexpected performance variations in kernels. For large-scale workloads, such as AI training and inference, performance unpredictability can lead to substantial losses. We investigate this problem in NVIDIA H100 GPUs with their distributed shared memory (DSMEM) architectural feature that reduces data movement from the L2 cache to Streaming Multiprocessors (SMs) with multicast loads, and uncover that floorsweeping restricts the number of SMs usable for clustered execution, increasing the number of execution waves of kernels. To alleviate this performance penalty, we introduce the wave-aware clustering strategy that accounts for these resource constraints and improves the throughput of the Hopper version of FlashAttention 4 by up to 5.30% over the unclustered baseline. Furthermore, we discover that the power constraint imposed by the thermal design power (TDP) limit causes the DSMEM-based memory bandwidth optimization to improve the throughput even for compute-bound kernels by creating a power headroom for higher SM frequencies through reduced data movement. Extending this analysis beyond GPUs, we find that power constraints also limit throughput scaling on Tenstorrent's Wormhole accelerator, highlighting the broader importance of accounting for physical non-idealities in kernel performance engineering.",
       "published": "2026-10-27T16:00:56Z",
-      "updated": "2026-10-27T16:00:56Z",
+      "updated": "2026-11-03T04:24:49Z",
       "categories": [
         "cs.AR"
       ],
-      "abs_url": "https://arxiv.org/abs/2610.37466v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.37466v1",
+      "abs_url": "https://arxiv.org/abs/2610.37466v2",
+      "pdf_url": "https://arxiv.org/pdf/2610.37466v2",
       "comment": "",
       "journal_ref": "",
       "topics": [
@@ -4719,7 +5541,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -4766,7 +5588,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -4822,7 +5644,7 @@
         "Long Context"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 6,
+      "age_days": 7,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -4874,7 +5696,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -4923,7 +5745,7 @@
         "Attention & Kernels"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -4974,7 +5796,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -5024,7 +5846,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Quantization",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5077,7 +5899,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -5126,7 +5948,7 @@
         "Long Context"
       ],
       "primary_topic": "Long Context",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -5180,7 +6002,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -5208,29 +6030,29 @@
     },
     {
       "id": "2610.35706",
-      "title": "Triage: Skip, Skim, or Refine Attention Tiles in Video Diffusion Transformers",
+      "title": "TriTile: Three-Tier Attention for Video Diffusion Transformers",
       "authors": [
         "Yeonjae Kim",
         "Omin Kwon",
         "Seong Hoon Seo",
         "Jae W. Lee"
       ],
-      "summary": "Attention over tens of thousands of visual tokens dominates the inference of video diffusion transformers (DiTs). Existing methods reduce this cost through sparsity, low precision, or both, but use a single precision for all kept tiles. We observe that the output error introduced by approximation varies widely across tiles. Many tiles can be skipped with little error, others must be computed but gain little beyond low precision, and a few retain substantial error even at low precision. We present Triage, a training-free attention method that assigns each tile one of three approximation tiers: skipping it by replacing it with its block means, skimming it in NVFP4, or refining it with NVFP4 residual correction. A lightweight router predicts each tile's error under each tier from block statistics and moves a tile to a more accurate tier only when the predicted error reduction justifies the extra compute, with a single price setting this trade-off. A fused kernel executes all three tiers in a single pass on the FP4 tensor cores of RTX Blackwell GPUs. Across Wan2.2, HunyuanVideo, and LTX-2.5, Triage accelerates end-to-end generation by up to 2.32x over dense FlashAttention, and in each of five settings it runs faster than every baseline while reaching 0.3-3.0 dB higher PSNR than the highest-PSNR baseline.",
+      "summary": "Attention over tens of thousands of visual tokens dominates the inference of video diffusion transformers (DiTs). Existing methods reduce this cost through sparsity, low precision, or both, but use a single precision for all kept tiles. We observe that the output error introduced by approximation varies widely across tiles. Many tiles can be skipped with little error, others must be computed but gain little beyond low precision, and a few retain substantial error even at low precision. We present TriTile, a training-free attention method that assigns each tile one of three approximation tiers: skipping it by replacing it with its block means, skimming it in NVFP4, or refining it with NVFP4 residual correction. A lightweight router predicts each tile's error under each tier from block statistics and spends extra compute on a tile only where it removes enough error; a single knob, a price on compute, controls the whole speed-quality trade-off. A fused kernel executes all three tiers in a single pass on the FP4 tensor cores. Over dense FlashAttention, TriTile speeds up generation by 1.38-1.83x on Wan2.2 at 23.0-27.6 dB PSNR, 2.28-2.32x on HunyuanVideo at 34.5-36.0 dB, and 1.84x on LTX-2.5 at 34.1 dB, and in every setting it Pareto-dominates every baseline in speed and PSNR.",
       "published": "2026-10-26T16:29:36Z",
-      "updated": "2026-10-26T16:29:36Z",
+      "updated": "2026-11-03T08:03:17Z",
       "categories": [
         "cs.LG",
         "cs.CV"
       ],
-      "abs_url": "https://arxiv.org/abs/2610.35706v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.35706v1",
+      "abs_url": "https://arxiv.org/abs/2610.35706v2",
+      "pdf_url": "https://arxiv.org/pdf/2610.35706v2",
       "comment": "",
       "journal_ref": "",
       "topics": [
         "Attention & Kernels"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -5283,7 +6105,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5334,7 +6156,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -5383,7 +6205,7 @@
         "Quantization"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -5436,7 +6258,7 @@
         "KV Cache"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 81,
         "tier": "B",
@@ -5489,7 +6311,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "KV Cache",
-      "age_days": 7,
+      "age_days": 8,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -5538,7 +6360,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -5587,7 +6409,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Efficient Inference",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 66,
         "tier": "C",
@@ -5639,7 +6461,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Attention & Kernels",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 78,
         "tier": "B",
@@ -5695,7 +6517,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 72,
         "tier": "B",
@@ -5750,7 +6572,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -5799,7 +6621,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 80,
         "tier": "B",
@@ -5850,7 +6672,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "Quantization",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 38,
         "tier": "D",
@@ -5900,7 +6722,7 @@
         "Sparsity / MoE"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 79,
         "tier": "B",
@@ -5953,7 +6775,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 8,
+      "age_days": 9,
       "quality": {
         "score": 84,
         "tier": "A",
@@ -6008,7 +6830,7 @@
         "Efficient Inference"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -6059,7 +6881,7 @@
         "Speculative Decoding"
       ],
       "primary_topic": "Speculative Decoding",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 74,
         "tier": "B",
@@ -6112,7 +6934,7 @@
         "Training Efficiency"
       ],
       "primary_topic": "LLM Serving",
-      "age_days": 9,
+      "age_days": 10,
       "quality": {
         "score": 76,
         "tier": "B",
@@ -6137,797 +6959,6 @@
       },
       "title_zh": "INTRA：交错的非连续令牌稀疏注意力",
       "summary_zh": "Transformers achieve strong performance across modalities but are bottlenecked by the quadratic cost of attention. Sparse attention can reduce this cost, but effective sparsity must preserve useful long-range communication and map well to GPU hardware.我们介绍 INTRA——Interleaved Non-contigious Token spaRse Attention——一种硬件感知的静态稀疏注意力设计，基于计算查询集（CQS）约束下的中继通信视图。 INTRA 不是直接覆盖每个稀疏层内的所有令牌到令牌交互，而是使用互补的稀疏组来提供跨层的短中介通信路径。 Scatter forms relay groups that sample broadly across local neighborhoods, while Gather reconnects these groups in subsequent layers.在分区模型下，该结构引导具有全局可达性的与 CQS 兼容的稀疏模式。我们的 CQS 感知 FlashAttention 风格的内核在运行时计算结构化索引，加载选定的非连续标记，并将它们密集打包以进行计算。在 A100 上，INTRA 在 2K$ FLUX.1-dev 一代中实现了 $1.53\\times$ 加速，测量的图像质量比 LoRA 自蒸馏后评估的 CLEAR 配置更好。 On LLaMA-3.1-8B, it improves long-context prefill efficiency with strong teacher-forced retrieval performance under matched LoRA adaptation. Attention-only benchmarks further show up to $8.4\\times$ and $10.4\\times$ speedups over MoBA and density-constrained NSA, respectively."
-    },
-    {
-      "id": "2610.33851",
-      "title": "Software Engineering LLMs: Why We Need Them and How Software Engineering Helps Build Them",
-      "authors": [
-        "Amir M. Ebrahimi",
-        "Mohammed Mehedi Hasan",
-        "Seyed Shayan Daneshvar",
-        "Jiahuei Lin",
-        "Gopi Krishnan Rajbahadur",
-        "Ahmed E. Hassan"
-      ],
-      "summary": "Software engineering (SE) expertise can shape how coding large language models (LLMs) are trained and which engineering capabilities they acquire. We examine this role through an industrial case study of capability-focused training for a 92B-parameter coding LLM serving more than 100,000 developers. We demonstrate how established SE knowledge can guide the selection of engineering capabilities, the construction of verifiable training data, and the evaluation of model improvements. To target repository-level refactoring, we developed RefactorForge, a pipeline that combines refactoring knowledge, established SE tools, and verification techniques to construct training data. Across 306 Python repositories, RefactorForge generated 5,704 executable tasks and retained 4,572 verified teacher trajectories totaling 72.51 million tokens. Incremental supervised fine-tuning on these trajectories, accounting for 0.46% of the preceding coding mixture's tokens, improved RefactorBench performance by 18.00 percentage points and SWE-Bench ProMax performance by 7.06 points. Under OpenCode, these improvements extended to SWE issue resolution, with gains of 4.97 points on SWE-Bench Verified and 1.23 points on SWE-Bench Pro. Improvements also persisted across other coding-agent harnesses, while greenfield repository generation showed mixed results. We report lessons from constructing capability-focused training data and evaluating its effects across engineering workloads. Building on this industrial experience, we propose a research agenda for expanding SE's role in transforming coding LLMs into SE LLMs: incorporating SE knowledge into model training, applying engineering methods to model development and maintenance, and systematically defining the engineering capabilities these models should acquire.",
-      "published": "2026-10-24T18:45:18Z",
-      "updated": "2026-10-24T18:45:18Z",
-      "categories": [
-        "cs.SE",
-        "cs.LG"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.33851v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.33851v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "LLM Serving",
-        "Training Efficiency"
-      ],
-      "primary_topic": "LLM Serving",
-      "age_days": 9,
-      "quality": {
-        "score": 74,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "工业价值突出，但学术证据仍偏应用化。",
-        "pros": [
-          "将SE知识系统融入数据构建与能力定义，问题动机清晰",
-          "给出大规模真实部署案例与多基准增益，实践影响力较强"
-        ],
-        "cons": [
-          "方法新颖性有限且因果归因不足，缺少更细致消融与跨语言泛化验证"
-        ],
-        "dimensions": {
-          "novelty": 3,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "软件工程法学硕士：为什么我们需要它们以及软件工程如何帮助构建它们",
-      "summary_zh": "软件工程 (SE) 专业知识可以决定大型语言模型 (LLM) 的编码方式以及他们获得的工程能力。我们通过针对为超过 100,000 名开发人员提供服务的 92B 参数编码 LLM 的以能力为中心的培训的工业案例研究来检验这一角色。我们展示了现有的 SE 知识如何指导工程能力的选择、可验证的训练数据的构建以及模型改进的评估。为了实现存储库级重构，我们开发了 RefactorForge，这是一个结合了重构知识、已建立的 SE 工具和验证技术来构建训练数据的管道。在 306 个 Python 存储库中，RefactorForge 生成了 5,704 个可执行任务，并保留了 4,572 个经过验证的教师轨迹，总计 7251 万个令牌。对这些轨迹进行增量监督微调（占先前编码混合标记的 0.46%），将 RefactorBench 性能提高了 18.00 个百分点，将 SWE-Bench ProMax 性能提高了 7.06 个百分点。在 OpenCode 下，这些改进扩展到了 SWE 问题解决，在 SWE-Bench Verified 上提高了 4.97 分，在 SWE-Bench Pro 上提高了 1.23 分。其他编码代理工具也持续改进，而新建存储库生成结果却好坏参半。我们报告了构建以能力为中心的培训数据并评估其在工程工作负载中的影响的经验教训。基于这一行业经验，我们提出了一个研究议程，以扩大SE在将编码LLM转变为SE LLM方面的作用：将SE知识纳入模型训练中，将工程方法应用于模型开发和维护，以及系统地定义这些模型应获得的工程能力。"
-    },
-    {
-      "id": "2610.33719",
-      "title": "ZipFusion: Fusing Lossless KV Decompression with Attention for Efficient LLM Decoding",
-      "authors": [
-        "Yuetao Chen",
-        "Peng Wang",
-        "Hong Xu"
-      ],
-      "summary": "The key-value (KV) cache places growing demands on GPU memory capacity and bandwidth as large language models serve longer contexts and more concurrent requests. Its footprint limits concurrency, while repeated KV reads during attention can make decoding memory-bandwidth bound. Prior lossless KV cache compression methods reduce transfers between devices but restore the uncompressed KV cache in GPU memory before attention. They therefore leave these repeated KV reads unchanged and require additional work and memory for decompression. We present ZipFusion, which enables attention to consume the losslessly compressed KV cache directly. ZipFusion co-designs the compression format and attention kernel to reduce the bytes read from GPU memory during attention. The kernel reconstructs the original values directly in registers using simple bit operations, avoiding a separate decompression pass and easing the memory-bandwidth bound. ZipFusion also reassigns memory freed by compression across layers to store additional KV cache. Its memory manager reserves space for ongoing generation and makes the remaining capacity available to new requests. We implement ZipFusion on top of FlashInfer and integrate it with SGLang. On an NVIDIA H100, ZipFusion achieves about 1.25x speedup over FlashInfer in decode attention. With 8K context, it improves model decode throughput by up to 26.3% over uncompressed SGLang under the same GPU memory budget. At each method's largest supported batch, it also delivers up to 2.76x the throughput of the best-performing lossless KV cache compression baseline.",
-      "published": "2026-10-24T15:07:10Z",
-      "updated": "2026-10-24T15:07:10Z",
-      "categories": [
-        "cs.AR",
-        "cs.DC"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.33719v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.33719v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "LLM Serving",
-        "KV Cache",
-        "Efficient Inference"
-      ],
-      "primary_topic": "LLM Serving",
-      "age_days": 9,
-      "quality": {
-        "score": 79,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "思路新颖且实用，但证据广度仍不足。",
-        "pros": [
-          "将无损KV解压与注意力核融合，避免独立解压并减少显存读带宽压力",
-          "同时优化内核与内存管理，在H100与SGLang集成下报告了有竞争力的吞吐提升"
-        ],
-        "cons": [
-          "摘要仅给出有限硬件与场景结果，缺少跨模型/长度/负载稳定性与端到端开销拆解，严谨性仍待验证",
-          "对比基线公平性与代价说明不足（如压缩率变化、精确实现细节、调参预算）"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "ZipFusion：融合无损 KV 解压缩和 Attention 实现高效 LLM 解码",
-      "summary_zh": "随着大型语言模型服务更长的上下文和更多并发请求，键值 (KV) 缓存对 GPU 内存容量和带宽的要求越来越高。它的占用空间限制了并发性，而在注意力过程中重复的 KV 读取可能会限制解码内存带宽。先前的无损 KV 缓存压缩方法减少了设备之间的传输，但在关注之前将未压缩的 KV 缓存恢复到 GPU 内存中。因此，他们保持这些重复的 KV 读取不变，并且需要额外的工作和内存来解压缩。我们提出了 ZipFusion，它可以让注意力直接使用无损压缩的 KV 缓存。 ZipFusion 共同设计了压缩格式和注意力内核，以减少注意力期间从 GPU 内存读取的字节数。内核使用简单的位操作直接在寄存器中重建原始值，避免了单独的解压缩过程并减轻了内存带宽限制。 ZipFusion 还重新分配跨层压缩释放的内存，以存储额外的 KV 缓存。其内存管理器为正在进行的生成保留空间，并使剩余容量可用于新请求。我们在 FlashInfer 之上实现 ZipFusion，并将其与 SGLang 集成。在 NVIDIA H100 上，ZipFusion 在解码注意力方面比 FlashInfer 实现了约 1.25 倍的加速。在 8K 上下文中，在相同 GPU 内存预算下，与未压缩的 SGLang 相比，它的模型解码吞吐量提高了 26.3%。在每种方法支持的最大批次中，它还提供高达性能最佳无损 KV 缓存压缩基准的 2.76 倍的吞吐量。"
-    },
-    {
-      "id": "2610.33625",
-      "title": "RAQ-MLA: Role-Aware Quantization for Multi-Head Latent Attention Caches",
-      "authors": [
-        "Tianqi Chen",
-        "Xunchao Li",
-        "Linchuan Xie",
-        "Guanghua Yu",
-        "Jianchen Zhu",
-        "Peisong Wang",
-        "Jian Cheng"
-      ],
-      "summary": "Multi-Head Latent Attention (MLA) has been adopted by recent frontier large language models. Instead of per-head keys and values, MLA caches a compressed KV latent that is up-projected into keys and values at decode time, together with a narrow positional key that carries position information into the attention score. Existing KV-cache quantization methods are designed around the keys and values of standard attention and do not account for what MLA actually caches, which costs accuracy at low bit widths. We analyze the MLA cache both in activation distribution and in how quantization error propagates to the attention output, and show that the two cached tensors play different roles: the latent mainly supplies the values, whereas the positional key dominates the attention score. We therefore propose RAQ-MLA (Role-Aware Quantization for Multi-Head Latent Attention Caches), which fits an invertible transform to each cached tensor against the error that tensor delivers to the attention output: attention-weighted value error for the latent and score perturbation for the positional key. Without training, RAQ-MLA quantizes the full MLA cache to about 2.5 bits per element, a 6.5x increase in theoretical KV-cache capacity, while remaining nearly lossless on reasoning and coding tasks across four MLA models.",
-      "published": "2026-10-24T11:54:55Z",
-      "updated": "2026-10-24T11:54:55Z",
-      "categories": [
-        "cs.AI",
-        "cs.LG"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.33625v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.33625v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "KV Cache",
-        "Quantization"
-      ],
-      "primary_topic": "KV Cache",
-      "age_days": 9,
-      "quality": {
-        "score": 78,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "问题切中要害，方法实用但证据仍偏摘要级",
-        "pros": [
-          "抓住MLA缓存量化与标准KV量化错配这一关键空白",
-          "基于张量角色差异设计目标函数，且无训练即可低比特近无损"
-        ],
-        "cons": [
-          "摘要缺少误差分析细节、基线完整性与统计显著性信息，稳健性仍待验证"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "RAQ-MLA：多头潜在注意力缓存的角色感知量化",
-      "summary_zh": "多头潜在注意力（MLA）已被最近的前沿大型语言模型采用。 MLA 不是按头键和值，而是缓存压缩的 KV 潜在值，该潜在值在解码时向上投影到键和值中，以及将位置信息携带到注意力分数中的窄位置键。现有的 KV 缓存量化方法是围绕标准注意力的键和值设计的，并没有考虑 MLA 实际缓存的内容，这会降低低位宽下的准确性。我们分析了 MLA 缓存的激活分布以及量化误差如何传播到注意力输出，并表明两个缓存张量发挥着不同的作用：潜在张量主要提供值，而位置键主导注意力分数。因此，我们提出了 RAQ-MLA（多头潜在注意力缓存的角色感知量化），它针对张量传递给注意力输出的误差，对每个缓存张量进行可逆变换：潜在注意力加权值误差和位置键的分数扰动。在没有训练的情况下，RAQ-MLA 将完整的 MLA 缓存量化为每个元素约 2.5 位，理论 KV 缓存容量增加了 6.5 倍，同时在四个 MLA 模型的推理和编码任务上保持几乎无损。"
-    },
-    {
-      "id": "2610.33501",
-      "title": "DualPace: Decoupled Scheduling and Cooperative GPU--CPU Decoding for LLM Serving",
-      "authors": [
-        "YuXuan Lin",
-        "KeQiang Wu",
-        "Kingsum Chow"
-      ],
-      "summary": "Large language model (LLM) serving relies on batching to improve inference throughput, but the key-value (KV) cache grows with sequence length and limits GPU-resident concurrency. CPU offloading can expand KV capacity using host memory, yet existing systems remain largely GPU-gated: CPU-resident requests make progress only when the GPU scheduler exposes suitable overlap opportunities. As a result, host memory and CPU compute cannot act as an independent serving resource, leading to bursty CPU-side progress and inflated tail inter-token latency (ITL) under load. We present DualPace, an LLM serving runtime that turns the host into an independently scheduled decode engine. DualPace separates scheduling authority across two engines: the GPU engine executes prefills and GPU-resident decodes, while an AMX-enabled CPU engine independently batches and advances CPU-resident decodes. The engines are decoupled in scheduling but cooperative in execution: the CPU can execute a complete decode iteration locally or selectively invoke GPU Dense Assist for dense stages, while offline profiles guide hardware-specific batching and routing. Our evaluations show that, in decode-oriented scenarios, DualPace improves serving throughput by 6.9--43.2\\% over NEO, a state-of-the-art open-source CPU-offloading system, and by 11.5--90.6\\% over vLLM, a widely used GPU serving system, while maintaining the same level of latency. DualPace also preserves NEO's P99 time-to-first-token (TTFT) advantage over vLLM while sustaining 7.3--50.5\\% higher request rates than NEO at the same level of P99 ITL.",
-      "published": "2026-10-24T07:10:20Z",
-      "updated": "2026-10-24T07:10:20Z",
-      "categories": [
-        "cs.DC",
-        "cs.LG"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.33501v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.33501v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "LLM Serving",
-        "Efficient Inference"
-      ],
-      "primary_topic": "LLM Serving",
-      "age_days": 10,
-      "quality": {
-        "score": 79,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "思路新颖且实用，但证据完整性仍待加强",
-        "pros": [
-          "提出GPU/CPU解耦调度并协同解码，明确针对现有CPU offloading“被GPU门控”的痛点",
-          "给出相对NEO与vLLM的显著吞吐与尾延迟改进，系统价值与工程落地潜力较高"
-        ],
-        "cons": [
-          "摘要缺少关键实验细节与统计稳健性信息（负载分布、模型规模、硬件代际、显著性检验），泛化与公平性风险仍在"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "DualPace：解耦调度和协同 GPU--LLM 服务的 CPU 解码",
-      "summary_zh": "大型语言模型 (LLM) 服务依赖批处理来提高推理吞吐量，但键值 (KV) 缓存会随着序列长度而增长，并限制 GPU 驻留并发性。 CPU 卸载可以使用主机内存扩展 KV 容量，但现有系统在很大程度上仍然是 GPU 门控的：只有当 GPU 调度程序公开合适的重叠机会时，CPU 驻留请求才会取得进展。因此，主机内存和 CPU 计算无法充当独立的服务资源，从而导致 CPU 端进度突发和负载下尾部令牌间延迟 (ITL) 膨胀。我们推出了 DualPace，一种 LLM 服务运行时，可将主机转变为独立调度的解码引擎。 DualPace 将调度权限分散到两个引擎中：GPU 引擎执行预填充和 GPU 驻留解码，而支持 AMX 的 CPU 引擎独立批处理和推进 CPU 驻留解码。这些引擎在调度中是解耦的，但在执行中是协作的：CPU 可以在本地执行完整的解码迭代，或有选择地调用 GPU 密集辅助来实现密集阶段，而离线配置文件则指导特定于硬件的批处理和路由。我们的评估表明，在面向解码的场景中，DualPace 比最先进的开源 CPU 卸载系统 NEO 提高了 6.9--43.2% 的服务吞吐量，比广泛使用的 GPU 服务系统 vLLM 提高了 11.5--90.6%，同时保持相同水平的延迟。 DualPace 还保留了 NEO 的 P99 首次令牌时间 (TTFT) 相对于 vLLM 的优势，同时在相同的 P99 ITL 水平上维持比 NEO 高 7.3--50.5% 的请求率。"
-    },
-    {
-      "id": "2610.33475",
-      "title": "LLMs in Cloud: A Discussion on Architecture, Orchestration, and Inference",
-      "authors": [
-        "Jannatun Noor",
-        "Athar Noor Mohammad Rafee",
-        "Md. Sadman Haque",
-        "Sreezon Das Gupta",
-        "Atiar Osman",
-        "Md. Abu Obaida Zishan"
-      ],
-      "summary": "The widespread deployment of foundational Large Language Models (LLM) across cloud datacenters marks a fundamental paradigm shift from stateless deep learning toward distributed, memory-intensive generative workloads. However, serving massive foundation models under stringent Service Level Objectives (SLO) exposes critical physical and system bottlenecks. These challenges include the persistent High Bandwidth Memory (HBM) wall, operational asymmetry between compute-bound prefilling and memory-bandwidth-bound decoding, explosive Key-Value (KV) cache expansion, prohibitive serverless cold starts, and hardware reliability vulnerabilities. Existing literature reviews remain layer-siloed, decoupling low-level accelerator virtualization from cluster orchestration and runtime inference, while largely overlooking defining advancements from 2024 to 2026. To address these limitations, this study presents a comprehensive, cross-layer systematic review guided by the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) 2020 framework. We synthesize a holistic taxonomy unifying hardware virtualization, cluster-level scheduling, and runtime inference optimizations, including iteration-level continuous batching, prefill-decoding disaggregation, and hierarchical KV cache offloading. Furthermore, we evaluate resilient cloud-native service architectures, examining scale-to-zero serverless paradigms, fault-tolerant checkpointing against silent data corruption, and hardware-enforced Trusted Execution Environments (TEEs) for multi-tenant isolation. Finally, we formalize the multi-dimensional Pareto trade-offs governing throughput, latency, monetary cost, and confidentiality, outlining a forward-looking research roadmap spanning Compute Express Link (CXL) memory pooling, in-memory computing, and autonomous multi-agent control planes to guide future cloud LLM infrastructure.",
-      "published": "2026-10-24T05:53:48Z",
-      "updated": "2026-10-24T05:53:48Z",
-      "categories": [
-        "cs.DC",
-        "cs.AI"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.33475v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.33475v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "LLM Serving",
-        "KV Cache",
-        "Efficient Inference"
-      ],
-      "primary_topic": "LLM Serving",
-      "age_days": 10,
-      "quality": {
-        "score": 72,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "选题重要且框架完整，但方法与证据强度待验证。",
-        "pros": [
-          "跨硬件虚拟化、集群调度与推理运行时的分层整合视角较系统",
-          "覆盖2024-2026关键议题并引入SLO/成本/隐私多目标权衡框架"
-        ],
-        "cons": [
-          "作为综述论文，创新性主要在组织与归纳，原创方法贡献有限",
-          "PRISMA执行细节与纳入排除标准在摘要中不充分，严谨性仍有不确定性"
-        ],
-        "dimensions": {
-          "novelty": 3,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "云中的法学硕士：关于架构、编排和推理的讨论",
-      "summary_zh": "基础大型语言模型（LLM）在云数据中心的广泛部署标志着从无状态深度学习到分布式、内存密集型生成工作负载的根本范式转变。然而，在严格的服务级别目标 (SLO) 下为大规模基础模型提供服务会暴露出关键的物理和系统瓶颈。这些挑战包括持久的高带宽内存 (HBM) 墙、计算限制的预填充和内存带宽限制的解码之间的操作不对称、爆炸性的键值 (KV) 缓存扩展、令人望而却步的无服务器冷启动以及硬件可靠性漏洞。现有的文献综述仍然是分层的，将低级加速器虚拟化与集群编排和运行时推理脱钩，同时在很大程度上忽略了 2024 年至 2026 年的定义进步。为了解决这些局限性，本研究提出了一项全面的、跨层的系统综述，以系统评价和元分析的首选报告项目 (PRISMA) 2020 框架为指导。我们综合了一个统一硬件虚拟化、集群级调度和运行时推理优化的整体分类法，包括迭代级连续批处理、预填充解码分解和分层 KV 缓存卸载。此外，我们还评估弹性云原生服务架构，检查从规模到零的无服务器范例、针对静默数据损坏的容错检查点，以及用于多租户隔离的硬件强制可信执行环境 (TEE)。最后，我们正式确定了管理吞吐量、延迟、货币成本和机密性的多维帕累托权衡，概述了涵盖计算快速链路 (CXL) 内存池、内存计算和自主多代理控制平面的前瞻性研究路线图，以指导未来的云 LLM 基础设施。"
-    },
-    {
-      "id": "2610.33379",
-      "title": "One Call Ahead: Packed Self-Speculative Decoding with Diffusion Drafting",
-      "authors": [
-        "Yuxiao Chen",
-        "Changxiao Cai"
-      ],
-      "summary": "Autoregressive (AR) language models generate tokens sequentially, so generating long outputs is costly. Speculative decoding mitigates this by using a lightweight drafter to propose multiple tokens for the target AR model to verify in parallel, while a diffusion-based drafter can produce an entire draft block in one forward pass. In models with AR and diffusion modes, one network both drafts and verifies, but drafting still waits for verification, so the standard schedule needs two sequential model calls per iteration. Existing one-call schedules avoid the wait but incur input size quadratic in the speculative width. Motivated by this efficiency bottleneck, we introduce Packed-SS, a self-speculative decoding schedule that verifies and drafts in a single model call with input size linear in the speculative width, while preserving the target model's distribution. The key idea is to let the diffusion drafter run one call ahead: while verifying the current draft, the model simultaneously constructs the next draft from an older verified prefix and keeps its unresolved suffix for the next iteration. Under a mild monotonicity assumption on the drafter, we further show that Packed-SS requires no more model calls than the standard two-call decoding in the greedy setting. Experiments on Nemotron 3B/8B and SetDLM 1.7B show higher throughput and lower mean wall time than both baselines under greedy decoding.",
-      "published": "2026-10-24T00:24:46Z",
-      "updated": "2026-10-24T00:24:46Z",
-      "categories": [
-        "cs.LG"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.33379v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.33379v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "Speculative Decoding",
-        "Efficient Inference"
-      ],
-      "primary_topic": "Speculative Decoding",
-      "age_days": 10,
-      "quality": {
-        "score": 79,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "思路新颖且实用，但证据广度仍不足。",
-        "pros": [
-          "提出线性输入规模的一次调用自投机调度，直击现有方法瓶颈",
-          "给出分布保持与调用次数不劣的理论说明，并在多模型上展示吞吐与时延收益"
-        ],
-        "cons": [
-          "关键结论依赖温和单调性假设，摘要未体现其可验证性与失效情形",
-          "实验主要集中于贪心解码，缺少采样场景与更大规模模型的泛化证据"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "提前一通：通过扩散起草进行打包自推测解码",
-      "summary_zh": "自回归 (AR) 语言模型按顺序生成标记，因此生成长输出的成本很高。推测性解码通过使用轻量级绘图器为目标 AR 模型提出多个标记以并行验证来缓解这一问题，而基于扩散的绘图器可以在一次前向传递中生成整个草稿块。在具有 AR 和扩散模式的模型中，一个网络同时进行起草和验证，但起草仍然等待验证，因此标准计划每次迭代需要两次顺序模型调用。现有的一调用调度避免了等待，但会导致输入大小与推测宽度成二次方。受此效率瓶颈的推动，我们引入了 Packed-SS，这是一种自推测解码计划，可在单个模型调用中验证和起草，输入大小与推测宽度呈线性关系，同时保留目标模型的分布。关键思想是让扩散起草者提前运行一个调用：在验证当前草案时，模型同时从较旧的已验证前缀构造下一个草案，并为下一次迭代保留其未解析的后缀。在起草者的温和单调性假设下，我们进一步表明，Packed-SS 不需要比贪婪设置中的标准两次调用解码更多的模型调用。 Nemotron 3B/8B 和 SetDLM 1.7B 上的实验表明，在贪婪解码下，与两个基线相比，吞吐量更高，平均挂壁时间更低。"
-    },
-    {
-      "id": "2610.33360",
-      "title": "LSTM-Style Looped Transformers with Shared KV Caches",
-      "authors": [
-        "Andreas Kirsch"
-      ],
-      "summary": "Recurrent transformers reuse weights to perform deep computation with fewer parameters. We study an LSTM-style transformer that also shares one key--value cache across its recurrent core. At width 1024, it uses 40.4% fewer parameters than an untied control at nearly matched forward FLOPs, and reduces persistent cache sets from fifteen to four. Parallel training supplies cache entries from a standard-attention pass, whereas continuation reads entries produced recursively using shared attention. We address this mismatch by aligning the two training passes' cache entries with a consistency loss during the final 10% of a fixed training-token budget. Across three model widths on FineWeb, this removes 81--89% of the continuation-loss penalty relative to full-cache evaluation. The improvement replicates on disjoint documents for two training seeds. Across four widths and 1.05--4.19B training tokens, the loss cost of weight tying is smallest at lower token budgets, suggesting an opportunity to use recurrent computation when data and model storage are limited.",
-      "published": "2026-10-23T23:12:12Z",
-      "updated": "2026-10-23T23:12:12Z",
-      "categories": [
-        "cs.LG"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.33360v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.33360v1",
-      "comment": "12 pages + 14 pages appendix",
-      "journal_ref": "",
-      "topics": [
-        "KV Cache"
-      ],
-      "primary_topic": "KV Cache",
-      "age_days": 10,
-      "quality": {
-        "score": 74,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "思路新颖且实用，但证据深度仍不足。",
-        "pros": [
-          "将循环权重复用与共享KV缓存结合，面向推理效率问题切中痛点",
-          "在近似匹配FLOPs下显著降参并减少持久缓存集合，工程价值明确"
-        ],
-        "cons": [
-          "评估主要停留在训练损失与续写损失，缺少端到端吞吐、时延和显存实测",
-          "一致性损失仅在训练末段启用，超参数与稳定性敏感性分析不足"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 3,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "具有共享 KV 缓存的 LSTM 式循环变压器",
-      "summary_zh": "循环变压器重用权重以更少的参数执行深度计算。我们研究了一种 LSTM 风格的转换器，它也在其循环核心之间共享一个键值缓存。在宽度为 1024 时，它在几乎匹配的正向 FLOP 下使用的参数比未绑定控件少 40.4%，并将持久缓存集从 15 个减少到 4 个。并行训练从标准注意力传递中提供缓存条目，而继续读取使用共享注意力递归生成的条目。我们通过在固定训练令牌预算的最后 10% 期间将两个训练遍的缓存条目与一致性损失对齐来解决这种不匹配问题。在 FineWeb 上的三个模型宽度中，相对于全缓存评估，这消除了 81--89% 的连续损失惩罚。该改进复制了两个训练种子的不相交文档。在四种宽度和 1.05--4.19B 训练令牌中，权重绑定的损失成本在令牌预算较低时最小，这表明当数据和模型存储有限时有机会使用循环计算。"
-    },
-    {
-      "id": "2610.32881",
-      "title": "NgramRL: Accelerating RL Post-Training for Structured Generation via Rollout-Aware N-gram Speculative Decoding",
-      "authors": [
-        "Nilesh Prasad Pandey",
-        "Jangseon Park",
-        "Jason Kong",
-        "Onat Gungor",
-        "Tajana Rosing"
-      ],
-      "summary": "Reinforcement learning (RL) post-training improves the reasoning capabilities of large language models, but its cost is dominated by autoregressive rollout generation, which can exceed 70% of training time. Existing speculative-decoding methods are poorly suited to this setting: model-based drafters consume scarce GPU memory and may become misaligned as the policy evolves, while existing model-free methods do not explicitly exploit repetition across training epochs. We observe that recent rollouts of the same prompt provide a high-quality, self-updating draft source. Based on this insight, we propose NgramRL, a per-prompt n-gram drafter constructed from bounded recent rollout history. NgramRL requires no auxiliary model, drafter training, or persistent GPU-resident drafter state, while target-model verification preserves the rollout distribution. To hide CPU cache lookup and scheduling, we further introduce an adaptive fan-out prefetcher that predicts likely verification outcomes (j, b), consisting of the accepted draft length j and target-emitted continuation token b. A causal budget allocator concentrates prefetches on high-probability outcomes, while uncovered outcomes fall back to sequential lookup without changing committed tokens. Across two model families and three reasoning and structured-generation workloads, NgramRL commits 3.60-7.77 tokens per target-model forward in the warm-cache regime, up to 1.99x more than SuffixDecoding and 7.0x more than prompt-lookup decoding. On Spider, the prefetcher covers 96.6% of Qwen3-8B outcomes at a candidate budget of 16 and improves measured rollout throughput by 1.38x over synchronous NgramRL, approaching its 1.40x overlap ceiling.",
-      "published": "2026-10-23T16:47:29Z",
-      "updated": "2026-10-23T16:47:29Z",
-      "categories": [
-        "cs.AI"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.32881v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.32881v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "Speculative Decoding",
-        "Efficient Inference"
-      ],
-      "primary_topic": "Speculative Decoding",
-      "age_days": 10,
-      "quality": {
-        "score": 82,
-        "tier": "A",
-        "label": "高质量",
-        "stars": 4,
-        "verdict": "思路实用且增益可观，但严谨性证据仍需加强",
-        "pros": [
-          "抓住RL后训练rollout瓶颈，提出无辅助模型的按提示n-gram草稿机制，系统开销友好",
-          "结合自适应预取与预算分配，端到端吞吐提升明确，且相对现有基线增益幅度较大"
-        ],
-        "cons": [
-          "结果强调warm-cache场景，跨任务与长时训练稳定性、分布保持证明及统计显著性细节仍不足"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "NgramRL：通过 Rollout-Aware N-gram 推测解码加速结构化生成的 RL 后训练",
-      "summary_zh": "强化学习 (RL) 后训练提高了大型语言模型的推理能力，但其成本主要由自回归推出生成主导，该生成可能超过训练时间的 70%。现有的推测解码方法不太适合这种设置：基于模型的绘图器消耗稀缺的 GPU 内存，并且随着策略的发展可能会变得不对齐，而现有的无模型方法并没有明确地利用跨训练时期的重复。我们观察到，最近推出的同一提示提供了高质量、自我更新的草稿源。基于这一见解，我们提出了 NgramRL，这是一种根据有限的最近推出历史构建的按提示的 n-gram 起草器。 NgramRL 不需要辅助模型、绘图员训练或持久的 GPU 驻留绘图员状态，而目标模型验证保留了推出分布。为了隐藏 CPU 缓存查找和调度，我们进一步引入了一个自适应扇出预取器，它可以预测可能的验证结果 (j, b)，其中包括接受的草稿长度 j 和目标发出的延续令牌 b。因果预算分配器将预取集中在高概率结果上，而未覆盖的结果则回退到顺序查找而不更改已提交的令牌。在两个模型系列以及三个推理和结构化生成工作负载中，NgramRL 在热缓存机制中为每个目标模型提交 3.60-7.77 个令牌，比 SuffixDecoding 多出 1.99 倍，比提示查找解码多出 7.0 倍。在 Spider 上，预取器在候选预算为 16 的情况下覆盖了 96.6% 的 Qwen3-8B 结果，并将测量的转出吞吐量比同步 NgramRL 提高了 1.38 倍，接近其 1.40 倍重叠上限。"
-    },
-    {
-      "id": "2610.32638",
-      "title": "InferSlice: A Reference Architecture for SLO-driven LLM Inference over a Telco Wide-Area Network",
-      "authors": [
-        "Juan Parra-Ullauri",
-        "Anthony Chiu",
-        "Hari Madhukumar",
-        "Zhaozhou Wu",
-        "Anderson Bravalheri",
-        "Alex Healing",
-        "Andy Corston-Petrie",
-        "Dimitra Simeonidou",
-        "Nektaria Efthymiou"
-      ],
-      "summary": "LLM inference is increasingly deployed as a core service for enterprise and interactive applications, but sovereignty, compliance, latency and resource-locality requirements can limit the suitability of centralised cloud deployments. Telco operators offer geographically distributed compute and network infrastructure for addressing these constraints. However, existing LLM serving frameworks are designed for tightly coupled data centres and provide limited support for coordinating geographically distributed and heterogeneous resources. We present InferSlice, a reference architecture for Service-Level Objective (SLO)-driven LLM inference over a telco infrastructure, integrating network slicing, GPU partitioning, elastic serving and observability. Led by BT in collaboration with the University of Bristol and NVIDIA, and realised on the JOINER UK national-scale wide-area network (WAN), InferSlice is evaluated on service differentiation across tiers, elastic scale-out, client-edge bandwidth as a bottleneck, and the reach of tensor, pipeline, data parallelism, and prefill/decode disaggregation over the WAN. Our results show that, on a general-purpose telco network, tiers yield distinct latency-throughput regimes, and weight streaming shortens scale-out time. Replication is placement-insensitive but memory-bound; pipeline parallelism tolerates near- and mid-cross-site hops, while tensor parallelism and disaggregation fail beyond a single subnet hop. We share practical insights from operating SLO-driven inference on a telco network, lessons learned and open questions, and hope to encourage further research on distributed and heterogeneous LLM inference systems.",
-      "published": "2026-10-23T13:51:02Z",
-      "updated": "2026-10-23T13:51:02Z",
-      "categories": [
-        "cs.DC",
-        "cs.AI"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.32638v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.32638v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "LLM Serving",
-        "Efficient Inference"
-      ],
-      "primary_topic": "LLM Serving",
-      "age_days": 10,
-      "quality": {
-        "score": 74,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "问题重要且工程扎实，但方法创新性与可证性一般。",
-        "pros": [
-          "聚焦主权合规与广域低时延部署，选题具现实紧迫性",
-          "在国家级WAN实网评估多并行策略，提供有价值系统经验"
-        ],
-        "cons": [
-          "更像参考架构与经验报告，核心算法/系统机制创新有限",
-          "摘要未体现严格对照、统计显著性与跨场景泛化证据，因果结论偏弱"
-        ],
-        "dimensions": {
-          "novelty": 3,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "InferSlice：通过电信广域网进行 SLO 驱动的 LLM 推理的参考架构",
-      "summary_zh": "LLM 推理越来越多地作为企业和交互式应用程序的核心服务进行部署，但主权、合规性、延迟和资源本地化要求可能会限制集中式云部署的适用性。电信运营商提供地理上分布式的计算和网络基础设施来解决这些限制。然而，现有的LLM服务框架是为紧密耦合的数据中心设计的，并且为协调地理上分布的异构资源提供有限的支持。我们推出了 InferSlice，这是一种在电信基础设施上进行服务级别目标 (SLO) 驱动的 LLM 推理的参考架构，集成了网络切片、GPU 分区、弹性服务和可观察性。 InferSlice 由 BT 与布里斯托大学和 NVIDIA 合作领导，并在 JOINER UK 国家级广域网 (WAN) 上实现，针对跨层服务差异化、弹性横向扩展、作为瓶颈的客户端边缘带宽以及 WAN 上张量、管道、数据并行性和预填充/解码分解的范围进行了评估。我们的结果表明，在通用电信网络上，各层会产生不同的延迟吞吐量机制，并且权重流会缩短横向扩展时间。复制对位置不敏感，但受内存限制；管道并行性可以容忍近站点和中跨站点跃点，而张量并行性和分解则无法超出单个子网跃点。我们分享在电信网络上运行 SLO 驱动推理的实用见解、经验教训和开放性问题，并希望鼓励对分布式和异构 LLM 推理系统的进一步研究。"
-    },
-    {
-      "id": "2610.32096",
-      "title": "DELA: Learning Controllable Edits for Diffusion Language Models",
-      "authors": [
-        "Xinsong Feng",
-        "Chenan Wang",
-        "Leshu Tang",
-        "Johnny Liu",
-        "Dong Li",
-        "Da Li",
-        "Haipeng Chen"
-      ],
-      "summary": "Diffusion language models (DLMs) support bidirectional denoising and iterative refinement, but generation remains largely controlled by token-level masking schedules. This leaves draft-level refinement implicit and limits explicit control over when to insert missing content, delete redundant spans, revisit uncertain regions, or stop editing. We introduce Diffusion Editing Language Adapter (DELA), a plug-in framework that enables controllable draft refinement with a frozen DLM. DELA operates on clean, variable-length drafts using four explicit editing actions: Insert, Delete, Remask, and Stop. The controller determines when and where to edit the draft, while the frozen DLM fills masked regions through denoising, separating high-level edit control from token-level generation. A naive single-phase editor would be computationally expensive because arbitrary interior edits can disrupt prefix stability and limit reliable KV-cache reuse. To address this, DELA uses a two-phase decoding procedure: a fast, append-only drafting phase that supports KV-cache reuse, followed by a global refinement phase that enables targeted non-monotonic edits to the full draft. We train the controller using a staged curriculum that begins with learning local edit priors from synthetic recovery tasks and mined actions that improve draft quality. Subsequent stages refine edit selection through rollout-based outcome preferences and alignment with downstream task feedback. Experiments on mathematical reasoning and code generation show that DELA achieves gains of up to 5.5 percentage points over direct diffusion decoding while keeping the backbone frozen. DELA thus provides a modular approach to explicit draft-level control in diffusion language models.",
-      "published": "2026-10-23T02:57:27Z",
-      "updated": "2026-10-23T02:57:27Z",
-      "categories": [
-        "cs.AI"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.32096v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.32096v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "KV Cache"
-      ],
-      "primary_topic": "KV Cache",
-      "age_days": 11,
-      "quality": {
-        "score": 76,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "思路新颖且实用，但证据链仍需加强",
-        "pros": [
-          "将草稿级编辑动作显式化，控制接口清晰且可插拔",
-          "两阶段解码兼顾KV缓存效率与全局非单调修订，工程价值高"
-        ],
-        "cons": [
-          "摘要未充分说明训练与消融细节，5.5pp增益的稳健性与泛化范围仍有不确定性"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "DELA：学习扩散语言模型的可控编辑",
-      "summary_zh": "扩散语言模型（DLM）支持双向去噪和迭代细化，但生成仍然主要由令牌级掩码计划控制。这使得草稿级细化变得隐式，并限制了对何时插入缺失内容、删除冗余跨度、重新访问不确定区域或停止编辑的显式控制。我们引入了扩散编辑语言适配器 (DELA)，这是一个插件框架，可通过冻结的 DLM 实现可控的草稿细化。 DELA 使用四种显式编辑操作对干净的、可变长度的草稿进行操作：插入、删除、重新屏蔽和停止。控制器确定何时何地编辑草稿，而冻结的 DLM 通过去噪填充屏蔽区域，将高级编辑控制与令牌级生成分开。一个简单的单阶段编辑器在计算上会非常昂贵，因为任意内部编辑可能会破坏前缀稳定性并限制可靠的 KV 缓存重用。为了解决这个问题，DELA 使用两阶段解码过程：一个支持 KV 缓存重用的快速、仅附加起草阶段，然后是一个全局细化阶段，可以对完整草稿进行有针对性的非单调编辑。我们使用分阶段课程来训练控制器，该课程首先从综合恢复任务中学习本地编辑先验，并挖掘提高草稿质量的动作。后续阶段通过基于推出的结果偏好并与下游任务反馈保持一致来完善编辑选择。数学推理和代码生成实验表明，DELA 在保持骨干网冻结的同时，比直接扩散解码实现了高达 5.5 个百分点的增益。因此，DELA 提供了一种模块化方法，用于在扩散语言模型中进行显式草稿级控制。"
-    },
-    {
-      "id": "2610.31911",
-      "title": "LazyFlash: Forward-Dense, Backward-Sparse Attention for Accelerated Long-Context Fine-Tuning",
-      "authors": [
-        "Keqi Deng",
-        "Ruchao Fan",
-        "Jinyu Li"
-      ],
-      "summary": "As large language models (LLMs) process increasingly long sequences, attention becomes a major computational bottleneck. Sparse attention mostly targets inference, yet many methods still train densely or cannot support sparse training, and their added complexity makes sparsity hard to turn into wall-clock speedups, leaving dense attention widely used in practice. This paper introduces LazyFlash, a forward-dense, backward-sparse attention method built on the observation that attention training is dominated by the backward pass. LazyFlash keeps the forward pass exactly dense, so the trained model remains a standard dense model that existing systems such as vLLM can serve without any change. For the backward pass, LazyFlash proposes a gradient-aware block sparsification design that ranks query blocks by their attention-output gradient norms and skips those contributing negligibly to parameter updates, turning the dense backward into a block-sparse one. A gradient-mass budget adapts the amount of skipped computation to each head and training step, while importance sampling preserves the dense gradient in expectation. These designs are implemented inside the tiled FlashAttention backward kernel, where skipped blocks are never loaded or computed, translating gradient sparsity into real wall-clock acceleration. Experiments on long-context text and speech LLMs show that LazyFlash maintains downstream performance while achieving up to 5.7x attention-backward speedup over FlashAttention and 1.7x end-to-end training speedup.",
-      "published": "2026-10-22T21:04:07Z",
-      "updated": "2026-10-22T21:04:07Z",
-      "categories": [
-        "cs.CL"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.31911v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.31911v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "LLM Serving",
-        "Sparsity / MoE",
-        "Long Context",
-        "Attention & Kernels",
-        "Efficient Inference",
-        "Training Efficiency"
-      ],
-      "primary_topic": "LLM Serving",
-      "age_days": 11,
-      "quality": {
-        "score": 82,
-        "tier": "A",
-        "label": "高质量",
-        "stars": 4,
-        "verdict": "思路扎实且工程价值高，但泛化仍待更强验证。",
-        "pros": [
-          "抓住训练反向主导开销这一关键痛点，forward-dense/backward-sparse定位清晰",
-          "与现有稠密推理栈兼容（如vLLM），避免部署割裂，实用落地价值高",
-          "将稀疏策略嵌入FlashAttention反向核并声明真实墙钟收益，系统贡献较强"
-        ],
-        "cons": [
-          "核心稀疏判据依赖梯度范数启发式，跨任务与超参稳健性风险仍需更系统证据",
-          "摘要未体现与其他训练期高效注意力方法的全面对比与消融完整性"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 4,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "LazyFlash：前向密集、后向稀疏注意力，用于加速长上下文微调",
-      "summary_zh": "随着大型语言模型（LLM）处理越来越长的序列，注意力成为主要的计算瓶颈。稀疏注意力主要针对推理，但许多方法仍然密集训练或无法支持稀疏训练，而且它们增加的复杂性使得稀疏性很难转化为挂钟加速，从而使得密集注意力在实践中得到广泛应用。本文介绍了 LazyFlash，这是一种前向密集、后向稀疏的注意力方法，基于注意力训练由后向传递主导的观察结果。 LazyFlash 保持前向传递完全密集，因此训练后的模型仍然是标准密集模型，vLLM 等现有系统无需任何更改即可提供服务。对于后向传递，LazyFlash 提出了一种梯度感知块稀疏化设计，该设计根据查询块的注意力输出梯度范数对查询块进行排序，并跳过那些对参数更新贡献微不足道的块，将密集后向转换为块稀疏块。梯度质量预算使跳过的计算量适应每个头和训练步骤，而重要性采样保留期望中的密集梯度。这些设计是在平铺的 FlashAttention 后向内核中实现的，其中跳过的块永远不会被加载或计算，从而将梯度稀疏性转化为真正的挂钟加速。对长上下文文本和语音 LLM 的实验表明，LazyFlash 保持下游性能，同时实现比 FlashAttention 高达 5.7 倍的注意力向后加速和 1.7 倍的端到端训练加速。"
-    },
-    {
-      "id": "2610.31880",
-      "title": "FSVL: Taxonomic Fast-Slow Vision-to-Language Collaborative Framework for Interpretable Confusable Fish Species Identification and Knowledge Generation in the Middle Yangtze River",
-      "authors": [
-        "Meng Liang",
-        "Fucheng Wang",
-        "Lang Zhao",
-        "Jun Chen",
-        "Ziying Li",
-        "Yuxiang Zhao",
-        "Haozhuang Chi",
-        "Wenkai Fang",
-        "Qiong Zhou",
-        "Junlin Yang",
-        "Jinming Wu"
-      ],
-      "summary": "The Yangtze River Basin is a critical region for freshwater biodiversity conservation. The implementation of the Yangtze River Ten-Year Fishing Ban has increased the importance of effective aquatic biodiversity monitoring and species-level identification. However, fine-grained identification of closely related freshwater fish species remains challenging due to subtle morphological differences. Existing deep learning methods often struggle to balance classification accuracy and inference efficiency, while LLMs may generate unsupported information when producing specialized biological knowledge. To address these challenges, this study proposes FSVL, a fast-slow dual-pathway framework integrating visual recognition with LLM-based Retrieval-Augmented Generation (RAG). A lightweight ResNet50 fast path performs preliminary classification across 51 fish species in the Middle Yangtze River Basin and routes predefined groups of easily confused species to a slow path for refined identification. Guided by taxonomic criteria, the slow path uses YOLOv8n to detect key morphological regions, including the head, dorsal fin, and tail, leveraging morphometric and outline traits to improve discrimination among closely related species. The framework further integrates a retrieval-enhanced Qwen3-14B backend, using soft tokens and Low-Rank Adaptation (LoRA) for parameter-efficient domain knowledge generation. On the evaluated test set of 607 images, the fast classifier achieved 99.67% accuracy, whereas the cascade corrected the two errors, yielding 100.00% overall accuracy; further validation on independent specimens and external conditions remains needed. Across 255 knowledge generation samples, scientific name accuracy rises from 91.37% to 100.00%, genus accuracy from 90.20% to 98.82%, and ROUGE-L from 0.335 to 0.655, supporting intelligent biodiversity monitoring and fisheries management.",
-      "published": "2026-10-22T20:22:31Z",
-      "updated": "2026-10-22T20:22:31Z",
-      "categories": [
-        "cs.CV",
-        "cs.AI"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.31880v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.31880v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "Efficient Inference",
-        "Training Efficiency"
-      ],
-      "primary_topic": "Efficient Inference",
-      "age_days": 11,
-      "quality": {
-        "score": 56,
-        "tier": "C",
-        "label": "中等",
-        "stars": 3,
-        "verdict": "应用导向明确，但方法创新与证据强度不足。",
-        "pros": [
-          "面向长江禁渔监测场景，任务价值与落地动机较强",
-          "快慢路径结合形态学先验与RAG，系统工程整合较完整"
-        ],
-        "cons": [
-          "方法主要是已有组件拼接（ResNet/YOLO/RAG/LoRA），算法新颖性有限",
-          "实验规模偏小（607张测试图、255生成样本），且出现100%准确率，泛化与数据泄漏风险需排查"
-        ],
-        "dimensions": {
-          "novelty": 2,
-          "significance": 3,
-          "rigor": 2,
-          "clarity": 3
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "FSVL：长江中游可解释易混淆鱼类物种识别和知识生成的分类快慢视觉语言协作框架",
-      "summary_zh": "长江流域是淡水生物多样性保护的重要区域。长江十年禁渔的实施，提高了有效水生生物多样性监测和物种层面识别的重要性。然而，由于细微的形态差异，密切相关的淡水鱼类物种的细粒度识别仍然具有挑战性。现有的深度学习方法往往难以平衡分类准确性和推理效率，而法学硕士在产生专门的生物知识时可能会产生不受支持的信息。为了应对这些挑战，本研究提出了 FSVL，一种将视觉识别与基于 LLM 的检索增强生成 (RAG) 相结合的快慢双路径框架。轻量级的 ResNet50 快速路径对长江中游流域的 51 种鱼类进行初步分类，并将预定义的易混淆物种组路由到慢速路径以进行精细识别。在分类学标准的指导下，慢速路径使用 YOLOv8n 来检测关键形态区域，包括头部、背鳍和尾部，利用形态测量和轮廓特征来提高密切相关物种之间的区分。该框架进一步集成了检索增强型 Qwen3-14B 后端，使用软令牌和低秩适应 (LoRA) 来生成参数高效的领域知识。在 607 张图像的评估测试集上，快速分类器实现了 99.67% 的准确率，而级联纠正了这两个错误，总体准确率达到 100.00%；仍需要对独立样本和外部条件进行进一步验证。在255个知识生成样本中，学名准确率从91.37%上升到100.00%，属准确率从90.20%上升到98.82%，ROUGE-L从0.335上升到0.655，支持智能生物多样性监测和渔业管理。"
-    },
-    {
-      "id": "2610.31840",
-      "title": "SPECMEM: Accelerating Agentic Tool Calling via Live Memory Management",
-      "authors": [
-        "Zihe Song",
-        "Wenting Zhao",
-        "Ye Liu",
-        "Yuanjie Zhu",
-        "Ke Xu",
-        "Shanghao Li",
-        "Philip S. Yu"
-      ],
-      "summary": "Tool-calling agents are mostly optimized for accuracy; in deployment, however, their growing cost is latency: every tool call is decoded autoregressively. Speculative decoding accelerates this without changing the output, and retrieved past calls make strong drafts under real use, where each user's behavior tends to repeat. Yet existing systems keep no cross-session memory, or build the draft store once and never update it. We propose SpecMem, a tool-call memory kept alive and managed throughout deployment: verified calls are written back online into bounded per-user stores with LRU eviction, and a side-effect gate defers irreversible calls until verification confirms. On multi-session, multi-user query streams served by three open-weight models, a frozen store steadily loses acceptance while SpecMem holds it: a 27% gap in mean accepted tokens (+11% to +34% across benchmarks, tracking how much novel work arrives after the store is built) and up to 1.74x wall-clock speedup. Ablations attribute the gain almost entirely to keeping the store live; local per-user scoping adds no acceptance but closes a measured cross-user leakage channel, and gating on declared side effects, rather than on retrieval confidence, is what eliminates irreversible mistakes.",
-      "published": "2026-10-22T19:24:21Z",
-      "updated": "2026-10-22T19:24:21Z",
-      "categories": [
-        "cs.CL"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.31840v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.31840v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "Speculative Decoding",
-        "Efficient Inference"
-      ],
-      "primary_topic": "Speculative Decoding",
-      "age_days": 11,
-      "quality": {
-        "score": 79,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "问题切中部署痛点，方案务实且效果有说服力。",
-        "pros": [
-          "聚焦代理工具调用延迟这一真实部署瓶颈，应用价值高",
-          "在线记忆更新与副作用门控结合，实测在多用户多会话下有稳定加速"
-        ],
-        "cons": [
-          "核心机制以系统工程整合为主，算法新颖性相对有限",
-          "摘要未充分交代统计显著性、长尾场景与额外系统开销，严谨性仍需正文支撑"
-        ],
-        "dimensions": {
-          "novelty": 3,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "SPECMEM：通过实时内存管理加速代理工具调用",
-      "summary_zh": "工具调用代理大多针对准确性进行了优化；然而，在部署中，它们不断增长的成本是延迟：每个工具调用都是自回归解码的。推测性解码在不改变输出的情况下加速了这一过程，并且检索到的过去的调用在实际使用中产生了强大的草稿，其中每个用户的行为往往会重复。然而，现有系统不保留跨会话内存，或者构建一次草稿存储并且从不更新它。我们提出了 SpecMem，一种在整个部署过程中保持活动和管理的工具调用内存：经过验证的调用通过 LRU 逐出在线写回到有界的每用户存储中，并且副作用门推迟了不可逆的调用，直到验证确认为止。在由三个开放权重模型提供的多会话、多用户查询流上，冻结存储逐渐失去接受度，而 SpecMem 保持它：平均接受令牌有 27% 的差距（跨基准+11% 到 +34%，跟踪商店构建后到达的新颖工作数量）和高达 1.74 倍的挂钟加速。消融几乎完全将收益归因于保持商店的活力；本地每用户范围界定不会增加接受度，但会关闭可测量的跨用户泄漏通道，并且对声明的副作用（而不是对检索置信度）进行控制可以消除不可逆转的错误。"
-    },
-    {
-      "id": "2610.31827",
-      "title": "KVStream: Adaptive Parallel Storage Management for KV Caching in Large-Scale LLM Serving",
-      "authors": [
-        "Avinash Maurya",
-        "Jaiaid Mobin",
-        "Jie Ye",
-        "M. Mustafa Rafique",
-        "Franck Cappello",
-        "Bogdan Nicolae"
-      ],
-      "summary": "Long-context LLM serving for agentic, coding, and document workloads reuses prefixes whose key-value (KV) cache outgrows GPU and host memory, putting storage I/O on the critical path of the inference step for retrieving prefixes. A single node-local NVMe absorbs all retrievals, while the parallel file system or cloud file store that nodes already mount carries almost no inference traffic. We cast prefix retrieval as aggregate-bandwidth scheduling across these tiers and present KVStream, a KV cache engine that batches a step's reads, defers writes behind the forward pass, replicates each chunk on every tier, and lets each tier adaptively claim the next unread chunks once it is free. Our performance model shows this routing attains the aggregate-bandwidth bound without prediction or tuning, whereas any static split misses it by a margin that grows as per-tier bandwidths drift or fluctuate. It also predicts that the time-to-first-token (TTFT) gain grows with load, as faster retrieval drains the queue, and disappears when host memory or arrival order keeps reuse in cache. Plugged into LMCache and evaluated on four models, six datasets, and up to 128 GPUs, KVStream retrieves within 5% of the bound, delivers up to 1.49$\\times$ higher offline throughput than LMCache, and lowers mean TTFT by up to 6.1$\\times$ under bursty arrivals.",
-      "published": "2026-10-22T19:05:39Z",
-      "updated": "2026-10-22T19:05:39Z",
-      "categories": [
-        "cs.DC"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.31827v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.31827v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "LLM Serving",
-        "KV Cache",
-        "Long Context",
-        "Efficient Inference"
-      ],
-      "primary_topic": "LLM Serving",
-      "age_days": 11,
-      "quality": {
-        "score": 81,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "问题重要、方法实用，证据较强但外部可推广性待证。",
-        "pros": [
-          "将前缀KV检索建模为跨层聚合带宽调度，动机清晰且契合真实瓶颈",
-          "给出无预测自适应路由与可验证性能上界，并在多模型多数据集与128卡规模展示显著TTFT/吞吐收益"
-        ],
-        "cons": [
-          "摘要未充分说明额外复制的存储与一致性开销、故障场景及跨集群/异构存储泛化边界"
-        ],
-        "dimensions": {
-          "novelty": 4,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "KVStream：大规模 LLM 服务中 KV 缓存的自适应并行存储管理",
-      "summary_zh": "服务于代理、编码和文档工作负载的长上下文 LLM 重用其键值 (KV) 缓存超出 GPU 和主机内存的前缀，将存储 I/O 放在用于检索前缀的推理步骤的关键路径上。单个节点本地 NVMe 吸收所有检索，而节点已安装的并行文件系统或云文件存储几乎不承载任何推理流量。我们将前缀检索作为跨这些层的聚合带宽调度，并提出 KVStream，这是一种 KV 缓存引擎，它可以批量读取步骤，推迟前向传递后面的写入，复制每个层上的每个块，并让每个层在空闲时自适应地声明下一个未读块。我们的性能模型显示，此路由无需预测或调整即可达到聚合带宽界限，而任何静态分割都会因每层带宽漂移或波动而增长的裕度而错过它。它还预测，首次令牌时间 (TTFT) 增益会随着负载的增加而增长，因为更快的检索会耗尽队列，而当主机内存或到达顺序在缓存中保持重用时，该增益就会消失。插入 LMCache 并在四个模型、六个数据集和多达 128 个 GPU 上进行评估，KVStream 检索范围在 5% 以内，提供比 LMCache 高出 1.49$\\times 的离线吞吐量，并在突发到达情况下将平均 TTFT 降低多达 6.1$\\times$。"
-    },
-    {
-      "id": "2610.31819",
-      "title": "Speculative Diffusion is a Tale of Two Tradeoffs",
-      "authors": [
-        "Aaron Zorel",
-        "Guy Van den Broeck",
-        "Aditya Grover",
-        "Daniel Israel"
-      ],
-      "summary": "Speculative decoding is a technique that accelerates the inference speed of autoregressive large language models (LLMs) by sampling from a faster, lower quality draft model. Traditionally, a fundamental characteristic of speculative decoding is that it is lossless with respect to the verifier distribution, guaranteeing speed without sacrificing quality. This differs from recently developed diffusion LLMs (dLLMs), which are notably able to achieve substantial speedups by degrading the quality of their outputs with less diffusion effort. Because diffusion models are able to sample faster than autoregressive models by generating tokens in parallel, they are considered strong candidates for draft models in speculative diffusion. While it is widely understood that diffusion models can sacrifice quality for speed, speculative decoding itself can also be generalized to generate lossy samples faster using more lenient acceptance criteria with respect to the verifier distribution. Presented with the two parameters of diffusion effort and speculative decoding leniency, this paper explores the full achievable Pareto frontier via joint variations of these parameters. Our experiments show that jointly varying diffusion effort and acceptance leniency can extend the speed-quality Pareto frontier over single step diffusion drafting.",
-      "published": "2026-10-22T18:56:50Z",
-      "updated": "2026-10-22T18:56:50Z",
-      "categories": [
-        "cs.LG"
-      ],
-      "abs_url": "https://arxiv.org/abs/2610.31819v1",
-      "pdf_url": "https://arxiv.org/pdf/2610.31819v1",
-      "comment": "",
-      "journal_ref": "",
-      "topics": [
-        "Speculative Decoding"
-      ],
-      "primary_topic": "Speculative Decoding",
-      "age_days": 11,
-      "quality": {
-        "score": 72,
-        "tier": "B",
-        "label": "较高",
-        "stars": 4,
-        "verdict": "问题设定有价值，但方法增量偏工程化",
-        "pros": [
-          "将扩散努力与投机验收宽松度统一建模，问题表述清晰",
-          "强调速度-质量帕累托前沿，实验目标贴近推理部署实践"
-        ],
-        "cons": [
-          "核心贡献更像系统性消融与调参框架，理论新意与普适性仍需更强证据"
-        ],
-        "dimensions": {
-          "novelty": 3,
-          "significance": 4,
-          "rigor": 3,
-          "clarity": 4
-        },
-        "source": "llm",
-        "model": "gpt-5.3-codex"
-      },
-      "title_zh": "投机扩散是两个权衡的故事",
-      "summary_zh": "推测解码是一种通过从速度更快、质量较低的草稿模型中进行采样来加速自回归大型语言模型 (LLM) 推理速度的技术。传统上，推测解码的一个基本特征是它对于验证者分布是无损的，保证速度而不牺牲质量。这与最近开发的扩散法学硕士 (dLLM) 不同，后者能够以较少的扩散工作降低输出质量，从而实现大幅加速。由于扩散模型能够通过并行生成标记来比自回归模型更快地采样，因此它们被认为是投机扩散中草案模型的有力候选者。虽然人们普遍认为扩散模型会为了速度而牺牲质量，但推测性解码本身也可以推广到使用相对于验证者分布更宽松的接受标准更快地生成有损样本。本文提出了扩散努力和推测解码宽大两个参数，通过这些参数的联合变化探索完全可实现的帕累托前沿。我们的实验表明，联合改变扩散努力和接受宽容可以扩展单步扩散起草的速度质量帕累托前沿。"
     }
   ]
 }
